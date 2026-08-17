@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chemie_green">#2e7d32</color>
+    <color name="chemie_green_dark">#1b5e20</color>
+    <color name="chemie_green_light">#4caf50</color>
+    <color name="chemie_bg">#f0f2f5</color>
+    <color name="chemie_surface">#ffffff</color>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ChemieLernen" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/chemie_green</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        <item name="android:statusBarColor">@color/chemie_green</item>
+        <item name="android:windowBackground">@color/chemie_bg</item>
+    </style>
+</resources>
