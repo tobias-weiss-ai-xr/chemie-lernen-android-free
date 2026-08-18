@@ -1,0 +1,4 @@
+- Initial F-Droid release
+- 12 Themenbereiche, 10+ Rechner, 15 Lernvideos
+- Native Jetpack Compose UI mit NavigationBar
+- Offline-fähig (WebView-Cache)

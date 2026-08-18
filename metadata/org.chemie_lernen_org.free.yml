@@ -1,0 +1,43 @@
+# F-Droid build metadata for Chemie Lernen (Free Edition)
+# See: https://f-droid.org/en/docs/Build_Metadata_Reference/
+Categories:
+  - Education
+  - Science & Education
+License: Apache-2.0
+AuthorName: Tobias Weiss
+AuthorWebSite: https://tobias-weiss.org
+WebSite: https://chemie-lernen.org
+SourceCode: https://github.com/tobias-weiss-ai-xr/chemie-lernen-android-free
+IssueTracker: https://github.com/tobias-weiss-ai-xr/chemie-lernen-android-free/issues
+Changelog: https://github.com/tobias-weiss-ai-xr/chemie-lernen-android-free/releases
+
+Name: Chemie Lernen
+Summary: Interactive chemistry learning platform (WebView)
+Description: |-
+    Chemie Lernen — Android App (Free Edition / F-Droid)
+
+    Inoffizielle Android-App für chemie-lernen.org — die kostenlose
+    interaktive Lernplattform für Chemie.
+
+    Features:
+    • 12 Themenbereiche der Chemie (Einführung bis Biochemie)
+    • 10+ Rechner (Molare Masse, pH, Stöchiometrie, Gasgesetze…)
+    • 15 Lernvideos
+    • Native Android UI (Jetpack Compose, Material 3)
+    • Offline-fähig (WebView-Cache)
+    • Kein Tracking, keine Werbung, keine Google Play Services
+
+RequiresRoot: 'no'
+
+Builds:
+  - versionName: "1.0.0"
+    versionCode: 1
+    commit: main
+    subdir: app
+    gradle: yes
+    output: build/outputs/apk/release/app-release-unsigned.apk
+
+AutoUpdateMode: Version
+UpdateCheckMode: HTTP
+CurrentVersion: "1.0.0"
+CurrentVersionCode: 1

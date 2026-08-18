@@ -1,0 +1,11 @@
+Chemie Lernen — interaktive Lernplattform für Chemie (Free Edition / F-Droid)
+
+12 Themenbereiche der Chemie (Einführung bis Biochemie), 10+ Rechner (Molare Masse, pH, Stöchiometrie, Gasgesetze…), 15 Lernvideos und ein Wissensnetz.
+
+Die App ist ein nativer WebView-Wrapper für chemie-lernen.org — ohne Werbung, ohne Tracking, ohne Google Play Services.
+
+Features:
+• Native Android UI (Jetpack Compose, Material 3, NavigationBar)
+• Offline-fähig (WebView-Cache)
+• 12 Themenbereiche, 10+ Rechner, 15 Lernvideos
+• F-Droid-kompatibel, Apache-2.0
