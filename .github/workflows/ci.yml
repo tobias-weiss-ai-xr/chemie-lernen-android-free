@@ -29,8 +29,10 @@ jobs:
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      - name: Verify gradle wrapper
+        run: |
+          test -f gradlew || { echo "gradlew not found — run 'gradle wrapper' locally"; exit 1; }
+          chmod +x gradlew
 
       - name: Unit tests
         run: ./gradlew :app:testDebugUnitTest --no-daemon
@@ -46,7 +48,7 @@ jobs:
         with:
           name: chemie-lernen-free-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
 
       - name: Upload release APK
@@ -54,5 +56,5 @@ jobs:
         with:
           name: chemie-lernen-free-release-apk
           path: app/build/outputs/apk/release/app-release-unsigned.apk
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
