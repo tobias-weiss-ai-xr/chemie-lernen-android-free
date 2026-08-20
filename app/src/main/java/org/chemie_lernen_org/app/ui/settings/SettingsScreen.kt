@@ -102,7 +102,7 @@ private fun SettingLink(
     ) {
         Text(
             text = label,
-            modifier = Modifier.align(Alignment.Start),
+            modifier = Modifier.align(Alignment.CenterVertically),
             style = MaterialTheme.typography.bodyLarge,
         )
     }

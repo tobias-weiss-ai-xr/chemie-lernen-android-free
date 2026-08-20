@@ -52,8 +52,8 @@ fun CalculatorsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(calculators) { (icon, inner) ->
-                val (title, url) = inner
+            items(calculators) { (iconPair, url) ->
+                val (icon, title) = iconPair
                 Card(
                     onClick = { onOpenUrl("https://chemie-lernen.org$url", title) },
                     modifier = Modifier.fillMaxWidth(),

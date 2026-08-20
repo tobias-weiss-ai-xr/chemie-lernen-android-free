@@ -54,8 +54,8 @@ fun TopicsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(themenbereiche) { (icon, inner) ->
-                val (title, url) = inner
+            items(themenbereiche) { (iconPair, url) ->
+                val (icon, title) = iconPair
                 Card(
                     onClick = { onOpenUrl("https://chemie-lernen.org$url", title) },
                     modifier = Modifier.fillMaxWidth(),
