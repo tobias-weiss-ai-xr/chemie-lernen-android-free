@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ChemieLernen" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/chemie_green</item>
-        <item name="colorOnPrimary">#ffffff</item>
+    <style name="Theme.ChemieLernen" parent="android:Theme.DeviceDefault.NoActionBar">
+        <item name="android:colorPrimary">@color/chemie_green</item>
         <item name="android:statusBarColor">@color/chemie_green</item>
         <item name="android:windowBackground">@color/chemie_bg</item>
     </style>
