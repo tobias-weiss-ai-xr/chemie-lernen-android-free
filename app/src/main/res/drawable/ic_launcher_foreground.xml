@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Erlenmeyer flask (white silhouette) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M47 20 h14 v28 l18 38 a6 6 0 0 1 -5.2 9 H34.2 a6 6 0 0 1 -5.2 -9 l18 -38 Z" />
+    <!-- Liquid (lighter green, bounded by the flask interior) -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M36.6 70 L71.4 70 L79 86 L29 86 Z" />
+</vector>
