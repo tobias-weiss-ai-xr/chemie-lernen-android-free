@@ -1,6 +1,8 @@
 package org.chemie_lernen_org.app.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,31 +35,31 @@ fun ChemieNavHost() {
             NavigationBar {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                    label = "Home",
+                    label = { Text("Home") },
                     selected = false,
                     onClick = { navController.navigate(Routes.HOME) { launchSingleTop = true } }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.MenuBook, contentDescription = null) },
-                    label = "Themen",
+                    label = { Text("Themen") },
                     selected = false,
                     onClick = { navController.navigate(Routes.TOPICS) { launchSingleTop = true } }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Calculate, contentDescription = null) },
-                    label = "Rechner",
+                    label = { Text("Rechner") },
                     selected = false,
                     onClick = { navController.navigate(Routes.CALCULATORS) { launchSingleTop = true } }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.VideoLibrary, contentDescription = null) },
-                    label = "Videos",
+                    label = { Text("Videos") },
                     selected = false,
                     onClick = { navController.navigate(Routes.VIDEOS) { launchSingleTop = true } }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Settings, contentDescription = null) },
-                    label = "Mehr",
+                    label = { Text("Mehr") },
                     selected = false,
                     onClick = { navController.navigate(Routes.SETTINGS) { launchSingleTop = true } }
                 )

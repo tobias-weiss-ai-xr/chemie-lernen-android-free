@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.rotate
 
 private val themenbereiche = listOf(
     "\u2728" to "Einf\u00fchrung in die Chemie" to "/themenbereiche/einfuehrung-chemie/",
@@ -53,8 +54,8 @@ fun TopicsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(themenbereiche) { (triple) ->
-                val (icon, title, url) = triple
+            items(themenbereiche) { (icon, inner) ->
+                val (title, url) = inner
                 Card(
                     onClick = { onOpenUrl("https://chemie-lernen.org$url", title) },
                     modifier = Modifier.fillMaxWidth(),

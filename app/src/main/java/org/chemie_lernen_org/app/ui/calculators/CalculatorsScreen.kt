@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.rotate
 
 private val calculators = listOf(
     "\u2697" to "Molare Masse" to "/molar-masse-rechner/",
@@ -51,8 +52,8 @@ fun CalculatorsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(calculators) { (triple) ->
-                val (icon, title, url) = triple
+            items(calculators) { (icon, inner) ->
+                val (title, url) = inner
                 Card(
                     onClick = { onOpenUrl("https://chemie-lernen.org$url", title) },
                     modifier = Modifier.fillMaxWidth(),
