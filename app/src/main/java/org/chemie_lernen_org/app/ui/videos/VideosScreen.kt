@@ -69,32 +69,6 @@ fun VideosScreen(
                 }
             }
 
-            Spacer(Modifier.height(24.dp))
-
-            Card(
-                onClick = {
-                    onOpenUrl(
-                        "https://www.youtube.com/@ZigsChemistry42",
-                        "Zig\u2019s Chemistry 42 auf YouTube"
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "Zum YouTube-Kanal",
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-            }
-
             Spacer(Modifier.height(16.dp))
 
             Text(

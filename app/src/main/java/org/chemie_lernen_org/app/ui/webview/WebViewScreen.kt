@@ -50,14 +50,13 @@ fun WebViewScreen(
                                 view: WebView,
                                 request: WebResourceRequest,
                             ): Boolean {
-                                val host = request.url.host ?: return false
-                                if (host == "chemie-lernen.org" || host == "youtube.com"
-                                    || host == "youtube-nocookie.com"
-                                ) {
-                                    view.loadUrl(request.url)
-                                    return true
+                                // Only allow navigation within chemie-lernen.org.
+                                // All external hosts (YouTube, GitHub, etc.) are blocked.
+                                val host = request.url.host ?: return true
+                                if (host == "chemie-lernen.org") {
+                                    return false // allow WebView to load
                                 }
-                                return false
+                                return true // block external navigation
                             }
                         }
                         loadUrl(url)

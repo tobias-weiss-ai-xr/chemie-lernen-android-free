@@ -83,9 +83,6 @@ fun SettingsScreen(
                     SettingLink("Datenschutz", "https://chemie-lernen.org/datenschutz/") {
                         onOpenUrl("https://chemie-lernen.org/datenschutz/", "Datenschutz")
                     }
-                    SettingLink("GitHub Repo", "https://github.com/tobias-weiss-ai-xr/chemie-lernen-org") {
-                        onOpenUrl("https://github.com/tobias-weiss-ai-xr/chemie-lernen-org", "GitHub")
-                    }
                 }
             }
         }
