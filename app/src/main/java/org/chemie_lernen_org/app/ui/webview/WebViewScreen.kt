@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import org.chemie_lernen_org.app.web.WebUrlPolicy
 
 @SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,13 +51,9 @@ fun WebViewScreen(
                                 view: WebView,
                                 request: WebResourceRequest,
                             ): Boolean {
-                                // Only allow navigation within chemie-lernen.org.
+                                // Only allow navigation within chemie-lernen.org (+ subdomains).
                                 // All external hosts (YouTube, GitHub, etc.) are blocked.
-                                val host = request.url.host ?: return true
-                                if (host == "chemie-lernen.org") {
-                                    return false // allow WebView to load
-                                }
-                                return true // block external navigation
+                                return !WebUrlPolicy.isAllowedHost(request.url.host)
                             }
                         }
                         loadUrl(url)

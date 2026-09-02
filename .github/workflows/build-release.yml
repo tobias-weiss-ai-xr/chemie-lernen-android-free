@@ -1,0 +1,89 @@
+name: Build & Release (Google Play)
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Validate Target SDK
+        run: |
+          TARGET_SDK=$(grep "targetSdk" app/build.gradle.kts | grep -oP '\d+' | head -1)
+          if [ "$TARGET_SDK" -lt 35 ]; then
+            echo "❌ Target SDK must be 35+ (current: $TARGET_SDK)"
+            exit 1
+          fi
+          echo "✅ Target SDK: $TARGET_SDK"
+
+      - name: Run Quality Gate
+        run: |
+          chmod +x scripts/quality-gate.sh gradlew
+          bash scripts/quality-gate.sh
+
+  build:
+    needs: [quality-gate]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.CHEMIELERNEN_RELEASE_KEYSTORE_B64 }}" | base64 --decode > chemie-lernen-release.jks
+          test -s chemie-lernen-release.jks && echo "Keystore decoded successfully"
+
+      - name: Build signed Release AAB
+        run: |
+          export CHEMIELERNEN_RELEASE_STORE_FILE=chemie-lernen-release.jks
+          export CHEMIELERNEN_RELEASE_STORE_PASSWORD=${{ secrets.CHEMIELERNEN_RELEASE_STORE_PASSWORD }}
+          export CHEMIELERNEN_RELEASE_KEY_ALIAS=${{ secrets.CHEMIELERNEN_RELEASE_KEY_ALIAS }}
+          export CHEMIELERNEN_RELEASE_KEY_PASSWORD=${{ secrets.CHEMIELERNEN_RELEASE_KEY_PASSWORD }}
+          chmod +x gradlew
+          ./gradlew clean bundleRelease
+
+      - name: Verify AAB Signature
+        run: |
+          if unzip -l app/build/outputs/bundle/release/app-release.aab | grep -q "META-INF/.*\.RSA"; then
+            echo "✅ AAB is signed"
+          else
+            echo "❌ AAB is NOT signed"
+            exit 1
+          fi
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chemie-lernen-play-store-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      - name: Generate SHA-256 Fingerprint
+        run: |
+          keytool -list -v -keystore chemie-lernen-release.jks \
+            -storepass "${{ secrets.CHEMIELERNEN_RELEASE_STORE_PASSWORD }}" > keystore-info.txt 2>&1
+          grep "SHA256:" keystore-info.txt

@@ -14,3 +14,7 @@ captures/
 core.*
 hs_err_*.log
 .kotlin
+
+# Google Play Publishing API Service-Account-Key (NIE committen!)
+google-play-api-key.json
+version.properties.bak
