@@ -1,0 +1,34 @@
+Chemie Lernen — the free, ad-free chemistry app for students and everyone who wants to understand chemistry.
+
+The app presents the content-rich learning platform chemie-lernen.org in a mobile-optimized way — no subscription, no ads, no tracking.
+
+📚 12 chemistry topics
+From introduction to chemistry over atomic structure, acids & bases, electrochemistry & redox to biochemistry — structured content for school and university.
+
+🧮 10+ chemistry calculators
+• Molar mass calculator
+• pH calculator (pH/pOH, strong & weak acids)
+• Stoichiometry & balancing chemical equations
+• Gas laws
+• Concentration & dilution
+• Density, solubility, combustion, redox potential
+
+🎬 15 educational videos
+High-quality learning videos by Zig's Chemistry 42 (Prof. Siegfried Schindler, JLU Giessen), embedded in matching topics.
+
+🕸️ Chemistry knowledge graph
+An interactive knowledge network that visualizes the connections between the core concepts of chemistry — perfect for reviewing and connecting ideas.
+
+Features:
+• Native Android app (Jetpack Compose, Material 3)
+• Fast navigation via bottom navigation bar
+• Offline-capable through WebView cache
+• No sign-up, no account data, no permissions besides Internet
+• No ads, no tracking, no data sharing
+• Open source (Apache-2.0)
+
+All content is provided by chemie-lernen.org (Tobias Weiß) and is continuously updated. The app is an open-source wrapper that shows the website mobile-optimized.
+
+Ideal for: high school chemistry, chemistry studies, exam preparation, general chemistry, inorganic chemistry, organic chemistry, physical chemistry.
+
+Package: org.chemie_lernen_org.free · Privacy: https://chemie-lernen.org/datenschutz

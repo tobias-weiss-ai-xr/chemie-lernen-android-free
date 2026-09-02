@@ -1,0 +1,6 @@
+First Google Play release of the free chemistry learning app:
+• 12 chemistry topics
+• 10+ interactive calculators (molar mass, pH, stoichiometry …)
+• 15 learning videos (Zig's Chemistry 42)
+• Interactive chemistry knowledge graph
+• No ads, no tracking, offline-capable

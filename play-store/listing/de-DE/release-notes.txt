@@ -1,0 +1,6 @@
+Erster Google-Play-Release der kostenlosen Chemie-Lern-App:
+• 12 Themenbereiche der Chemie
+• 10+ interaktive Rechner (Molare Masse, pH, Stöchiometrie …)
+• 15 Lernvideos (Zig's Chemistry 42)
+• Interaktives Wissensnetz
+• Keine Werbung, kein Tracking, offline-fähig

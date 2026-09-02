@@ -1,0 +1,34 @@
+Chemie Lernen — die kostenlose, werbefreie Chemie-App für Schüler, Studierende und alle, die Chemie verstehen wollen.
+
+Die App bietet die inhaltsreiche Lernplattform chemie-lernen.org mobil-optimiert und ohne Abo, ohne Werbung, ohne Tracking.
+
+📚 12 Themenbereiche der Chemie
+Von der Einführung in die Chemie über Aufbau der Materie, Säuren & Basen, Elektrochemie & Redox bis hin zur Biochemie – strukturiert aufbereitete Inhalte für Schule und Studium.
+
+🧮 10+ Chemie-Rechner
+• Molare Masse berechnen
+• pH-Rechner (pH-/pOH-Werte, starke & schwache Säuren)
+• Stöchiometrie & Reaktionsgleichungen ausgleichen
+• Gasgesetze
+• Konzentration & Verdünnung
+• Dichte, Löslichkeit, Verbrennung, Redox-Potenzial
+
+🎬 15 Lernvideos
+Hochwertige Lernvideos von Zig’s Chemistry 42 (Prof. Siegfried Schindler, JLU Gießen), eingebettet in die passenden Themenbereiche.
+
+🕸️ Wissensnetz der Chemie
+Ein interaktiver Wissensgraph, der die Zusammenhänge zwischen den wichtigsten Konzepten der Chemie sichtbar macht – ideal zum Wiederholen und Vernetzen.
+
+Eigenschaften:
+• Native Android-App (Jetpack Compose, Material 3)
+• Schnelle Navigation per Bottom-Navigation
+• Offline-fähig durch WebView-Cache
+• Keine Anmeldung, keine Kontodaten, keine Berechtigungen außer Internet
+• Keine Werbung, kein Tracking, keine Datenweitergabe
+• Open Source (Apache-2.0)
+
+Die Inhalte stammen von chemie-lernen.org (Tobias Weiß) und werden kontinuierlich aktualisiert. Die App ist ein Open-Source-Wrapper, der die Webseite mobil-optimiert anzeigt.
+
+Ideal für: Chemie Abitur, Chemie Studium, Klausurvorbereitung, Allgemeine Chemie, Anorganische Chemie, Organische Chemie, Physikalische Chemie.
+
+App-ID: org.chemie_lernen_org.free · Datenschutz: https://chemie-lernen.org/datenschutz

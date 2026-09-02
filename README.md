@@ -33,17 +33,31 @@ an, ohne Werbung, ohne Tracking.
 
 Voraussetzungen: JDK 17, Android SDK (compileSdk 35).
 
-Die App ben\u00f6tigt **keinen Keystore** zum Bauen — F-Droid und andere
+Die App benötigt **keinen Keystore** zum Bauen — F-Droid und andere
 Distributionen signieren selbst.
 
 ## Distribution
 
 | | Free Edition (dieses Repo) |
 |---|---|
-| App-ID | `org.chemie_leren_org.free` |
+| App-ID | `org.chemie_lernen_org.free` |
 | Lizenz | Apache-2.0 |
-| Distribution | F-Droid / direkt |
+| Distribution | F-Droid / direkt · **Google Play** (in Vorbereitung) |
 | Quellcode | [GitHub](https://github.com/tobias-weiss-ai-xr/chemie-lernen-android-free) |
+
+### Release für Google Play
+
+```bash
+bash scripts/generate-keystore.sh      # einmalig: Keystore + .keystore.env (Backup nach E:\backup-recovery)
+bash scripts/release-pipeline.sh       # Quality Gate → signiertes AAB → versionCode-Bump
+bash scripts/publish-release.sh        # (optional) via Publishing-API, braucht Service-Account-Key
+```
+
+- `version.properties` ist Single Source of Truth für versionCode/versionName
+  (F-Droid-Metadata `metadata/*.yml` synchron halten)
+- **F-Droid-Kompatibilität bleibt**: ohne Signing-Env baut die App weiterhin
+  `app-release-unsigned.apk` (F-Droid signiert selbst)
+- Store-Assets & Checklisten: `play-store/`, `PLAY_CONSOLE_CHECKLIST.md`, `GO_LIVE.md`
 
 ## Architektur
 

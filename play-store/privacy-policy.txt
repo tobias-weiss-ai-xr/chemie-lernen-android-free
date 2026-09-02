@@ -1,0 +1,47 @@
+# Datenschutzerklärung — Chemie Lernen (Android App)
+
+Stand: 2026-09-02
+
+## Verantwortlicher
+
+Tobias Weiß
+chemie-lernen.org / tobias-weiss.org
+
+## Kurzfassung
+
+Die App **Chemie Lernen** (org.chemie_lernen_org.free) ist ein Open-Source-WebView-Wrapper
+für die Lernplattform **chemie-lernen.org**. Sie erhebt **keine personenbezogenen Daten**,
+enthält **keine Werbung**, **kein Tracking** und **keine Analysedienste**.
+
+## Was die App tut
+
+- Die App zeigt Inhalte der Webseite chemie-lernen.org in einem integrierten Browser-View
+  (WebView) an.
+- Für die Anzeige ist eine Internetverbindung erforderlich; dafür wird die Berechtigung
+  INTERNET verwendet.
+- Die App selbst legt keine Cookies, keine Konten und keine lokalen Nutzerdaten an.
+
+## Welche Daten verarbeitet werden
+
+- **Durch den Nutzer eingegebene Daten:** keine. Es gibt keine Anmeldung, keine Formulare,
+  keine Profilerstellung.
+- **Technische Daten:** Beim Aufruf der Webseite gelten die Datenschutzhinweise von
+  chemie-lernen.org (Server-Logs des Hosters, siehe dort).
+- **Standort, Kontakte, Dateien:** werden nicht verwendet.
+
+## Webseite-Privatssphäre
+
+Beim Laden von Inhalten aus chemie-lernen.org gelten die Datenschutzhinweise der Plattform:
+**https://chemie-lernen.org/datenschutz**
+
+## Rechte des Nutzers
+
+Da die App selbst keine personenbezogenen Daten erhebt, bestehen keine gesonderten
+Auskunfts- oder Löschpflichten durch die App. Für Datenverarbeitung durch chemie-lernen.org
+gelten die Rechte nach DSGVO (Auskunft, Berichtigung, Löschung, Widerspruch) gegenüber dem
+Betreiber von chemie-lernen.org.
+
+## Open Source
+
+Der Quellcode ist unter Apache-2.0 auf GitHub veröffentlicht und kann eingesehen werden:
+https://github.com/tobias-weiss-ai-xr/chemie-lernen-android-free
