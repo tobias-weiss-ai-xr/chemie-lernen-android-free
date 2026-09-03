@@ -1,5 +1,7 @@
 package ai.chemistry_learning_org.app.ui.navigation
 
+import java.util.Base64
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -24,7 +26,29 @@ object Routes {
     const val VIDEOS = "videos"
     const val SETTINGS = "settings"
     const val WEBVIEW = "webview/{url}/{title}"
-    fun webview(url: String, title: String) = "webview/$url/$title"
+
+    /**
+     * Builds the webview route path. URL and title are base64url-encoded so
+     * the path keeps exactly three segments ("webview", url, title) — raw
+     * slashes in URLs previously broke NavController pattern matching and
+     * crashed the app (IllegalArgumentException: Navigation destination ...
+     * cannot be found). Base64url (A-Z a-z 0-9 - _) contains no '/', '%',
+     * or spaces, so Navigation's own percent-decoding cannot corrupt it.
+     */
+    fun webview(url: String, title: String): String {
+        val enc = { s: String ->
+            Base64.getUrlEncoder().withoutPadding().encodeToString(s.toByteArray(Charsets.UTF_8))
+        }
+        return "webview/${enc(url)}/${enc(title)}"
+    }
+
+    /** Inverse of [webview] — decode the two path arguments. */
+    fun fromWebview(encodedUrl: String, encodedTitle: String): Pair<String, String> {
+        val dec = { s: String ->
+            String(Base64.getUrlDecoder().decode(s), Charsets.UTF_8)
+        }
+        return dec(encodedUrl) to dec(encodedTitle)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,9 +130,10 @@ fun ChemieNavHost() {
                 )
             }
             composable(Routes.WEBVIEW) { backStackEntry ->
-                val url = backStackEntry.arguments?.getString("url") ?: ""
-                val title = backStackEntry.arguments?.getString("title")
-                    ?: stringResource(R.string.app_name)
+                val rawUrl = backStackEntry.arguments?.getString("url").orEmpty()
+                val rawTitle = backStackEntry.arguments?.getString("title").orEmpty()
+                val (url, decodedTitle) = Routes.fromWebview(rawUrl, rawTitle)
+                val title = decodedTitle.ifEmpty { stringResource(R.string.app_name) }
                 ai.chemistry_learning_org.app.ui.webview.WebViewScreen(
                     url = url,
                     title = title,

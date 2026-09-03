@@ -61,4 +61,48 @@ class WebUrlPolicyTest {
         assertThat(WebUrlPolicy.isAllowedHost("CHEMIE-LERNEN.ORG")).isTrue()
         assertThat(WebUrlPolicy.isAllowedHost("www.Chemie-Lernen.org")).isTrue()
     }
+
+    // ------------------------------------------------------------------
+    // Additional hardening cases (host is expected WITHOUT scheme, user
+    // info, or port — WebView's Uri.host already strips those; the policy
+    // must still fail CLOSED if such strings ever reach it).
+    // ------------------------------------------------------------------
+
+    @Test
+    fun `blocks host with port suffix (fail closed)`() {
+        assertThat(WebUrlPolicy.isAllowedHost("chemie-lernen.org:8080")).isFalse()
+        assertThat(WebUrlPolicy.isAllowedHost("chemie-lernen.org:80")).isFalse()
+    }
+
+    @Test
+    fun `blocks trailing-dot fqdn (fail closed)`() {
+        // "chemie-lernen.org." is DNS-equivalent, but the policy must not
+        // accept any variation it has not explicitly vetted.
+        assertThat(WebUrlPolicy.isAllowedHost("chemie-lernen.org.")).isFalse()
+    }
+
+    @Test
+    fun `blocks full urls instead of bare hosts (fail closed)`() {
+        assertThat(WebUrlPolicy.isAllowedHost("https://chemie-lernen.org")).isFalse()
+        assertThat(WebUrlPolicy.isAllowedHost("https://chemie-lernen.org/themen")).isFalse()
+    }
+
+    @Test
+    fun `allows deep subdomains`() {
+        assertThat(WebUrlPolicy.isAllowedHost("a.b.chemie-lernen.org")).isTrue()
+        assertThat(WebUrlPolicy.isAllowedHost("x.y.z.www.chemie-lernen.org")).isTrue()
+    }
+
+    @Test
+    fun `trims surrounding whitespace before matching`() {
+        assertThat(WebUrlPolicy.isAllowedHost(" chemie-lernen.org ")).isTrue()
+        assertThat(WebUrlPolicy.isAllowedHost("\tchemie-lernen.org\n")).isTrue()
+    }
+
+    @Test
+    fun `blocks dash-spoofed hosts`() {
+        assertThat(WebUrlPolicy.isAllowedHost("chemie-lernen.org.evil.com")).isFalse()
+        assertThat(WebUrlPolicy.isAllowedHost("chemie-lernen-org.com")).isFalse()
+        assertThat(WebUrlPolicy.isAllowedHost("chemie.lernen.org")).isFalse()
+    }
 }
