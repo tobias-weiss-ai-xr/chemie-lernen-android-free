@@ -21,3 +21,4 @@ version.properties.bak
 
 __pycache__/
 *.pyc
+play-store/upload-key-certificate.pem
