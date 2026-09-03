@@ -72,6 +72,8 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            // JaCoCo coverage for unit tests: ./gradlew :app:createDebugUnitTestCoverageReport
+            enableUnitTestCoverage = true
         }
     }
     compileOptions {
