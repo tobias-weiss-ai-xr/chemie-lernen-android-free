@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.rotate
 import ai.chemistry_learning_org.R
+import ai.chemistry_learning_org.app.web.SiteUrls
 
 internal data class Topic(@StringRes val titleRes: Int, val url: String, val icon: String)
 
@@ -62,7 +63,7 @@ fun TopicsScreen(
             items(topics) { topic ->
                 val title = stringResource(topic.titleRes)
                 Card(
-                    onClick = { onOpenUrl("https://chemie-lernen.org${topic.url}", title) },
+                    onClick = { onOpenUrl(SiteUrls.resolve(topic.url), title) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                 ) {

@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import ai.chemistry_learning_org.R
-import ai.chemistry_learning_org.app.web.WebUrlPolicy
+import ai.chemistry_learning_org.app.web.WebViewNavPolicy
 
 @SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,9 +56,19 @@ fun WebViewScreen(
                                 view: WebView,
                                 request: WebResourceRequest,
                             ): Boolean {
-                                // Only allow navigation within chemie-lernen.org (+ subdomains).
-                                // All external hosts (YouTube, GitHub, etc.) are blocked.
-                                return !WebUrlPolicy.isAllowedHost(request.url.host)
+                                return when (WebViewNavPolicy.decide(request.url.toString())) {
+                                    WebViewNavPolicy.Decision.ALLOW -> false
+                                    WebViewNavPolicy.Decision.OPEN_EXTERNAL -> {
+                                        // mailto:, tel:, geo:, intent: → hand to the OS
+                                        runCatching {
+                                            context.startActivity(
+                                                android.content.Intent(android.content.Intent.ACTION_VIEW, request.url),
+                                            )
+                                        }
+                                        true
+                                    }
+                                    WebViewNavPolicy.Decision.BLOCK -> true
+                                }
                             }
                         }
                         loadUrl(url)

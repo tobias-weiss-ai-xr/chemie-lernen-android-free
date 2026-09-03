@@ -18,16 +18,34 @@ class UrlCatalogTest {
     private val urlRegex = Regex("""https?://[A-Za-z0-9.\-_]+(?:/[A-Za-z0-9./\-_]*)?""")
     private val allowedHost = "chemie-lernen.org"
 
-    private val allUrls: List<String> by lazy {
+    private val allKtFiles: List<File> by lazy {
         srcRoot.walkTopDown()
             .filter { it.isFile && it.extension == "kt" }
-            .flatMap { file -> urlRegex.findAll(file.readText()).map { it.value } }
+            .toList()
+    }
+
+    private val allUrls: List<String> by lazy {
+        allKtFiles.flatMap { file -> urlRegex.findAll(file.readText()).map { it.value } }
             .toList()
     }
 
     @Test
-    fun `sources contain url literals at all (sanity so the scan can not rot)`() {
-        assertThat(allUrls).isNotEmpty()
+    fun `platform host is defined in exactly one place (the web package)`() {
+        // SiteUrls.BASE builds on WebUrlPolicy.ALLOWED_HOST; no other file
+        // may hardcode the domain, or the whitelist and the links can drift.
+        val filesWithHost = allKtFiles.filter { it.readText().contains(allowedHost) }
+        assertThat(filesWithHost).isNotEmpty()
+        for (file in filesWithHost) {
+            assertThat(file.path.replace('\\', '/')).contains("/web/")
+        }
+    }
+
+    @Test
+    fun `no url literals outside the web package (all go through SiteUrls)`() {
+        val offenders = allKtFiles
+            .filter { !it.path.replace('\\', '/').contains("/web/") }
+            .flatMap { file -> urlRegex.findAll(file.readText()).map { "${file.name}: ${it.value}" } }
+        assertThat(offenders).isEmpty()
     }
 
     @Test
@@ -47,8 +65,10 @@ class UrlCatalogTest {
     }
 
     @Test
-    fun `url literals are canonical https to the platform`() {
+    fun `any url literal that remains must be canonical https to the platform`() {
+        // may legitimately be empty (everything routed through SiteUrls) —
+        // but a literal, if present, must be exactly the allowed host
         val hosts = allUrls.map { it.removePrefix("https://").substringBefore('/') }
-        assertThat(hosts.toSet()).containsExactly(allowedHost)
+        assertThat(hosts.filter { it != allowedHost }).isEmpty()
     }
 }

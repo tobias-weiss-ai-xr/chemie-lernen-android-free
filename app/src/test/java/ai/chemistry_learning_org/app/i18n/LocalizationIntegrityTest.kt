@@ -83,4 +83,49 @@ class LocalizationIntegrityTest {
         val differingRatio = differing.toDouble() / en.keys.size
         assertThat(differingRatio).isAtLeast(0.5)
     }
+
+    // ------------------------------------------------------------------
+    // Formatting and hygiene
+    // ------------------------------------------------------------------
+
+    @Test
+    fun `format placeholders match between english and german`() {
+        // A missing/swapped %1$s in one locale crashes String.format at
+        // runtime for that language only — hard to spot in review.
+        val placeholder = Regex("%\\d+\$s|%\\d+\$d|%\\d+\$[df]|%s|%d")
+        for (key in en.keys) {
+            val enArgs = placeholder.findAll(en.getValue(key)).map { it.value }.sorted().toList()
+            val deArgs = placeholder.findAll(de.getValue(key) ).map { it.value }.sorted().toList()
+            assertThat(deArgs).isEqualTo(enArgs)
+        }
+    }
+
+    @Test
+    fun `no unfinished placeholders leak into strings`() {
+        for ((bucket, map) in listOf("values" to en, "values-de" to de)) {
+            val offenders = map.filterValues { v ->
+                Regex("(?i)\\b(TODO|FIXME|XXX|PLACEHOLDER)\\b").containsMatchIn(v)
+            }
+            assertThat(offenders).isEmpty()
+        }
+    }
+
+    @Test
+    fun `string values have no surrounding whitespace`() {
+        // the parser already trims; guard against xml-embedded newlines
+        // that survive entity-only resources
+        for ((bucket, map) in listOf("values" to en, "values-de" to de)) {
+            val offenders = map.filterValues { v -> v != v.trim() || v.contains("\n") }
+            assertThat(offenders).isEmpty()
+        }
+    }
+
+    @Test
+    fun `apostrophes are escaped for aapt`() {
+        // unescaped ' breaks the Android resource compiler
+        for ((bucket, map) in listOf("values" to en, "values-de" to de)) {
+            val offenders = map.filterValues { v -> Regex("(?<!\\\\)' ").containsMatchIn("$v ") }
+            assertThat(offenders).isEmpty()
+        }
+    }
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.rotate
 import ai.chemistry_learning_org.R
+import ai.chemistry_learning_org.app.web.SiteUrls
 
 internal data class Calculator(@StringRes val titleRes: Int, val url: String, val icon: String)
 
@@ -60,7 +61,7 @@ fun CalculatorsScreen(
             items(calculators) { calculator ->
                 val title = stringResource(calculator.titleRes)
                 Card(
-                    onClick = { onOpenUrl("https://chemie-lernen.org${calculator.url}", title) },
+                    onClick = { onOpenUrl(SiteUrls.resolve(calculator.url), title) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                 ) {

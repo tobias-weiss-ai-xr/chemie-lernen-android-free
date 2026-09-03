@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ai.chemistry_learning_org.R
+import ai.chemistry_learning_org.app.web.SiteUrls
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,13 +80,13 @@ fun SettingsScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     SettingLink(stringResource(R.string.link_website)) {
-                        onOpenUrl("https://chemie-lernen.org", appName)
+                        onOpenUrl(SiteUrls.home(), appName)
                     }
                     SettingLink(imprint) {
-                        onOpenUrl("https://chemie-lernen.org/impressum/", imprint)
+                        onOpenUrl(SiteUrls.imprint(), imprint)
                     }
                     SettingLink(privacy) {
-                        onOpenUrl("https://chemie-lernen.org/datenschutz/", privacy)
+                        onOpenUrl(SiteUrls.privacy(), privacy)
                     }
                 }
             }

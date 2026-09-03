@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ai.chemistry_learning_org.R
+import ai.chemistry_learning_org.app.web.SiteUrls
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +55,7 @@ fun VideosScreen(
             Card(
                 onClick = {
                     onOpenUrl(
-                        "https://chemie-lernen.org/lernvideos/",
+                        SiteUrls.videos(),
                         videosTitle,
                     )
                 },

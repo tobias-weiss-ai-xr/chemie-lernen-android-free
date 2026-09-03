@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ai.chemistry_learning_org.R
+import ai.chemistry_learning_org.app.web.SiteUrls
 
 private data class QuickAction(
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -44,7 +45,7 @@ fun HomeScreen(
         QuickAction(Icons.Default.Calculate, R.string.home_action_calculators, R.string.home_action_calculators_sub) { onOpenCalculators() },
         QuickAction(Icons.Default.VideoLibrary, R.string.home_action_videos, R.string.home_action_videos_sub) { onOpenVideos() },
         QuickAction(Icons.Default.School, R.string.home_action_network, R.string.home_action_network_sub) {
-            onOpenUrl("https://chemie-lernen.org/wissensnetz/", networkTitle)
+            onOpenUrl(SiteUrls.knowledgeGraph(), networkTitle)
         },
     )
 
