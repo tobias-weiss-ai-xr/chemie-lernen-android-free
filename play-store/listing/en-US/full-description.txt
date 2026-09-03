@@ -1,34 +1,45 @@
-Chemistry Learning — the free, ad-free chemistry app for students and everyone who wants to understand chemistry.
+Understand chemistry instead of just memorizing it.
+Learn chemistry with 12 structured topics, 10+ calculators and 15 videos —
+everything you need for exam prep, school and university. 100% free: no ads,
+no tracking, no account required.
 
-The app presents the content-rich learning platform chemie-lernen.org in a mobile-optimized way — no subscription, no ads, no tracking.
+From the periodic table and atomic structure to acids and bases,
+electrochemistry and biochemistry — all content comes from the learning
+platform chemie-lernen.org.
 
-📚 12 chemistry topics
-From introduction to chemistry over atomic structure, acids & bases, electrochemistry & redox to biochemistry — structured content for school and university.
+📚 12 CHEMISTRY TOPICS
+Clearly structured lessons for school and university: introduction to
+chemistry, atomic structure and the periodic table, acids and bases,
+electrochemistry & redox reactions, biochemistry and more.
 
-🧮 10+ chemistry calculators
-• Molar mass calculator
-• pH calculator (pH/pOH, strong & weak acids)
-• Stoichiometry & balancing chemical equations
-• Gas laws
-• Concentration & dilution
-• Density, solubility, combustion, redox potential
+🧮 10+ CHEMISTRY CALCULATORS
+Solve and check your homework in seconds:
+• Molar mass calculator for any chemical formula
+• pH calculator (pH/pOH for strong and weak acids and bases)
+• Stoichiometry calculator and chemical equation balancer
+• Gas laws, concentration & dilution
+• Density, solubility, combustion and redox potential
 
-🎬 15 educational videos
-High-quality learning videos by Zig's Chemistry 42 (Prof. Siegfried Schindler, JLU Giessen), embedded in matching topics.
+🎬 15 LEARNING VIDEOS
+High-quality chemistry videos by Zig's Chemistry 42 (Prof. Siegfried
+Schindler, JLU Giessen) — embedded exactly where they match the topic.
 
-🕸️ Chemistry knowledge graph
-An interactive knowledge network that visualizes the connections between the core concepts of chemistry — perfect for reviewing and connecting ideas.
+🕸️ INTERACTIVE KNOWLEDGE GRAPH
+See how chemistry fits together: an interactive knowledge network links the
+core concepts of chemistry — ideal for revising and connecting what you
+have learned.
 
-Features:
-• Native Android app (Jetpack Compose, Material 3)
-• Fast navigation via bottom navigation bar
-• Offline-capable through WebView cache
-• No sign-up, no account data, no permissions besides Internet
+WHO IS IT FOR?
+✅ High-school students preparing for exams
+✅ University students in introductory chemistry courses
+✅ Teachers looking for clear explanations and ready-to-use calculators
+✅ Self-learners who want to finally understand chemistry
+
+WHY YOU CAN TRUST THIS APP
 • No ads, no tracking, no data sharing
+• No account or sign-up — just open the app and start learning
 • Open source (Apache-2.0)
+• Native Android app (Jetpack Compose, Material 3) with fast bottom navigation
+• Content continuously updated and powered by chemie-lernen.org (Tobias Weiß)
 
-All content is provided by chemie-lernen.org (Tobias Weiß) and is continuously updated. The app is an open-source wrapper that shows the website mobile-optimized.
-
-Ideal for: high school chemistry, chemistry studies, exam preparation, general chemistry, inorganic chemistry, organic chemistry, physical chemistry.
-
-Package: ai.chemistry_learning_org · Privacy: https://chemie-lernen.org/datenschutz
+Privacy: https://chemie-lernen.org/datenschutz
