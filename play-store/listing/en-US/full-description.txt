@@ -1,4 +1,4 @@
-Chemie Lernen — the free, ad-free chemistry app for students and everyone who wants to understand chemistry.
+Chemistry Learning — the free, ad-free chemistry app for students and everyone who wants to understand chemistry.
 
 The app presents the content-rich learning platform chemie-lernen.org in a mobile-optimized way — no subscription, no ads, no tracking.
 
@@ -31,4 +31,4 @@ All content is provided by chemie-lernen.org (Tobias Weiß) and is continuously 
 
 Ideal for: high school chemistry, chemistry studies, exam preparation, general chemistry, inorganic chemistry, organic chemistry, physical chemistry.
 
-Package: org.chemie_lernen_org.free · Privacy: https://chemie-lernen.org/datenschutz
+Package: ai.chemistry_learning_org · Privacy: https://chemie-lernen.org/datenschutz

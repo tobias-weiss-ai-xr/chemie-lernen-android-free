@@ -13,8 +13,8 @@ import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "play-store", "screenshots", "phone")
-PKG = "org.chemie_lernen_org.free"
-ACTIVITY = "org.chemie_lernen_org.app.MainActivity"
+PKG = "ai.chemistry_learning_org"
+ACTIVITY = "ai.chemistry_learning_org.app.MainActivity"
 
 devices = subprocess.run(
     ["adb", "devices"], capture_output=True, text=True

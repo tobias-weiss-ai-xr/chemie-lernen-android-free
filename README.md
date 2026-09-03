@@ -40,7 +40,7 @@ Distributionen signieren selbst.
 
 | | Free Edition (dieses Repo) |
 |---|---|
-| App-ID | `org.chemie_lernen_org.free` |
+| App-ID | `ai.chemistry_learning_org` |
 | Lizenz | Apache-2.0 |
 | Distribution | F-Droid / direkt · **Google Play** (in Vorbereitung) |
 | Quellcode | [GitHub](https://github.com/tobias-weiss-ai-xr/chemie-lernen-android-free) |

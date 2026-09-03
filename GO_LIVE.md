@@ -27,7 +27,7 @@ Stand: **2026-09-02** · Branch `main` (gepusht)
 
 ## Wichtige IDs
 
-- **Package Name**: `org.chemie_lernen_org.free`
+- **Package Name**: `ai.chemistry_learning_org`
 - **Version**: `1.0.0` (code 1) — aktuell identisch mit F-Droid
 - **Keystore**: `chemie-lernen-release.jks` (Upload-Key; Alias `chemielernen`)
 - **SHA-256**: `8B:BC:A0:54:20:27:A2:58:4A:FB:16:19:1B:94:03:AE:B3:56:F8:6A:36:71:27:59:F9:1F:40:DE:83:4D:93:1B`
@@ -41,8 +41,8 @@ Werte: `C:\Users\Tobias\secrets\chemie-lernen-play\github-secrets.env` (4 fertig
 
 ### B) Play Console einrichten (~30 min, Browser)
 Anleitung komplett: `PLAY_CONSOLE_CHECKLIST.md` + `GOOGLE_PLAY_API_SETUP.md`
-1. $25 Account → App „Chemie Lernen" anlegen (Package `org.chemie_lernen_org.free`)
-2. Store Listing (DE+EN, Assets aus `play-store/`)
+1. $25 Account → App **Chemistry Learning** anlegen (Package `ai.chemistry_learning_org`, Standard-Sprache **Englisch (en-US)**; de-DE zusätzlich als „Chemie Lernen")
+2. Store Listing (EN=Standard „Chemistry Learning" + DE „Chemie Lernen", Assets aus `play-store/`)
 3. IARC-Rating 3+, Ads=Nein, Finanzfunktionen=Nein, Data-Safety-Formular
 4. Länder: DE, AT, CH
 5. (API-Zugang für Automatisierung, optional)
@@ -53,7 +53,7 @@ Anleitung komplett: `PLAY_CONSOLE_CHECKLIST.md` + `GOOGLE_PLAY_API_SETUP.md`
 
 ## Wichtig
 - `versionCode` UND `versionName` in `version.properties` ÄNDERN → F-Droid-Metadata
-  `metadata/org.chemie_lernen_org.free.yml` **synchron halten** (F-Droid liest daraus).
+  `metadata/ai.chemistry_learning_org.yml` **synchron halten** (F-Droid liest daraus).
 - Keystore-Verlust = keine Updates mehr. **Primär:** `C:\Users\Tobias\secrets\chemie-lernen-play\`
   (Arbeitskopie im Repo-Root; E:\backup-recovery\chemie-lernen-keystore\ ist nur Backup-Spiegel,
   zusätzlich zweites Medium, z. B. verschlüsseltes Backup).

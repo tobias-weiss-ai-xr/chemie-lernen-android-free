@@ -18,7 +18,7 @@
 2. E-Mail (aus JSON: `client_email`) eintragen, Rolle **Admin**
 
 ## IDs
-- **Package**: `org.chemie_lernen_org.free`
+- **Package**: `ai.chemistry_learning_org`
 - **AAB**: `app/build/outputs/bundle/release/app-release.aab`
 - **Listings**: `play-store/listing/{de-DE,en-US}/`
 

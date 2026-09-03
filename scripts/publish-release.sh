@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 # ============================================================
 
 API_KEY_FILE="google-play-api-key.json"
-PACKAGE="org.chemie_lernen_org.free"
+PACKAGE="ai.chemistry_learning_org"
 AAB="app/build/outputs/bundle/release/app-release.aab"
 DE_DIR="play-store/listing/de-DE"
 EN_DIR="play-store/listing/en-US"

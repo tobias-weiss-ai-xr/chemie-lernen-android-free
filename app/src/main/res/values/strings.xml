@@ -1,4 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- DEFAULT locale = English (English is the Play Store default language). -->
 <resources>
-    <string name="app_name">Chemie Lernen</string>
+    <string name="app_name">Chemistry Learning</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_topics">Topics</string>
+    <string name="nav_calculators">Calculators</string>
+    <string name="nav_videos">Videos</string>
+    <string name="nav_more">More</string>
+    <string name="back">Back</string>
+    <string name="open">Open</string>
+
+    <!-- Home -->
+    <string name="home_title">🧪 Chemistry Learning</string>
+    <string name="home_tagline">Interactive chemistry — free &amp; no tracking</string>
+    <string name="home_action_topics">Topics</string>
+    <string name="home_action_topics_sub">12 chemistry topics</string>
+    <string name="home_action_calculators">Calculators</string>
+    <string name="home_action_calculators_sub">Molar mass, pH, stoichiometry…</string>
+    <string name="home_action_videos">Videos</string>
+    <string name="home_action_videos_sub">Zig\'s Chemistry 42</string>
+    <string name="home_action_network">Knowledge Network</string>
+    <string name="home_action_network_sub">Chemistry knowledge graph</string>
+    <string name="home_about_title">🧬 About this app</string>
+    <string name="home_about_body">This is an unofficial app for chemie-lernen.org, the free learning platform for chemistry. All content is provided by Tobias Weiß and the team behind chemie-lernen.org. The app offers a mobile-optimized view and contains no ads and no tracking.</string>
+
+    <!-- Screens -->
+    <string name="topics_title">Topics</string>
+    <string name="calculators_title">Calculators</string>
+    <string name="videos_title">Learning Videos</string>
+    <string name="settings_title">More</string>
+
+    <!-- Topics -->
+    <string name="topic_introduction">Introduction to Chemistry</string>
+    <string name="topic_matter">Structure of Matter</string>
+    <string name="topic_inorganic">Inorganic Compounds</string>
+    <string name="topic_energetics">Energetics</string>
+    <string name="topic_redox">Electrochemistry &amp; Redox</string>
+    <string name="topic_acids">Acids &amp; Bases</string>
+    <string name="topic_equilibrium">Equilibrium &amp; Kinetics</string>
+    <string name="topic_analytical">Analytical Methods</string>
+    <string name="topic_fuels">Crude Oil &amp; Organic Compounds</string>
+    <string name="topic_products">Organic Products</string>
+    <string name="topic_biochemistry">Biochemistry</string>
+    <string name="topic_reactions">Organic Reaction Types</string>
+
+    <!-- Calculators -->
+    <string name="calc_molar_mass">Molar Mass</string>
+    <string name="calc_ph">pH Calculator</string>
+    <string name="calc_stoichiometry">Stoichiometry</string>
+    <string name="calc_gas_laws">Gas Laws</string>
+    <string name="calc_concentration">Concentration</string>
+    <string name="calc_density">Density</string>
+    <string name="calc_dilution">Dilution</string>
+    <string name="calc_solubility">Solubility</string>
+    <string name="calc_combustion">Combustion</string>
+    <string name="calc_redox">Redox Potential</string>
+
+    <!-- Videos -->
+    <string name="videos_author">Zig\'s Chemistry 42</string>
+    <string name="videos_author_sub">Prof. Siegfried Schindler, JLU Giessen</string>
+    <string name="videos_all">All videos</string>
+    <string name="videos_all_sub">15 learning videos, automatically updated</string>
+    <string name="videos_body">The videos are embedded in the respective topics. All rights belong to the channel operator.</string>
+
+    <!-- More / Settings -->
+    <string name="settings_info">ℹ️ Info</string>
+    <string name="settings_version">Version 1.0.0</string>
+    <string name="settings_app_id">App-ID: ai.chemistry_learning_org</string>
+    <string name="settings_license">License: Apache-2.0</string>
+    <string name="settings_body">All content is provided by chemie-lernen.org (Tobias Weiß). The app is an open-source wrapper and does not provide its own content.</string>
+    <string name="settings_links">🔗 Links</string>
+    <string name="link_website">Website</string>
+    <string name="link_imprint">Imprint</string>
+    <string name="link_privacy">Privacy Policy</string>
 </resources>

@@ -31,4 +31,4 @@ Die Inhalte stammen von chemie-lernen.org (Tobias Weiß) und werden kontinuierli
 
 Ideal für: Chemie Abitur, Chemie Studium, Klausurvorbereitung, Allgemeine Chemie, Anorganische Chemie, Organische Chemie, Physikalische Chemie.
 
-App-ID: org.chemie_lernen_org.free · Datenschutz: https://chemie-lernen.org/datenschutz
+App-ID: ai.chemistry_learning_org · Datenschutz: https://chemie-lernen.org/datenschutz

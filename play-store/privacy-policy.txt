@@ -9,7 +9,7 @@ chemie-lernen.org / tobias-weiss.org
 
 ## Kurzfassung
 
-Die App **Chemie Lernen** (org.chemie_lernen_org.free) ist ein Open-Source-WebView-Wrapper
+Die App **Chemie Lernen** (ai.chemistry_learning_org) ist ein Open-Source-WebView-Wrapper
 für die Lernplattform **chemie-lernen.org**. Sie erhebt **keine personenbezogenen Daten**,
 enthält **keine Werbung**, **kein Tracking** und **keine Analysedienste**.
 

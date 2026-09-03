@@ -1,4 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- German localization (values-de). -->
 <resources>
     <string name="app_name">Chemie Lernen</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_topics">Themen</string>
+    <string name="nav_calculators">Rechner</string>
+    <string name="nav_videos">Videos</string>
+    <string name="nav_more">Mehr</string>
+    <string name="back">Zurück</string>
+    <string name="open">Öffnen</string>
+
+    <!-- Home -->
+    <string name="home_title">🧪 Chemie Lernen</string>
+    <string name="home_tagline">Interaktive Chemie — kostenlos &amp; ohne Tracking</string>
+    <string name="home_action_topics">Themenbereiche</string>
+    <string name="home_action_topics_sub">12 Themen der Chemie</string>
+    <string name="home_action_calculators">Rechner</string>
+    <string name="home_action_calculators_sub">Molare Masse, pH, Stöchiometrie…</string>
+    <string name="home_action_videos">Lernvideos</string>
+    <string name="home_action_videos_sub">Zig\'s Chemistry 42</string>
+    <string name="home_action_network">Wissensnetz</string>
+    <string name="home_action_network_sub">Wissensgraph der Chemie</string>
+    <string name="home_about_title">🧬 Über diese App</string>
+    <string name="home_about_body">Dies ist eine inoffizielle App für chemie-lernen.org, die kostenlose Lernplattform für Chemie. Alle Inhalte stammen von Tobias Weiß und dem Team hinter chemie-lernen.org. Die App bietet eine mobile-optimierte Ansicht und keine Werbung, kein Tracking.</string>
+
+    <!-- Screens -->
+    <string name="topics_title">Themenbereiche</string>
+    <string name="calculators_title">Rechner</string>
+    <string name="videos_title">Lernvideos</string>
+    <string name="settings_title">Mehr</string>
+
+    <!-- Topics -->
+    <string name="topic_introduction">Einführung in die Chemie</string>
+    <string name="topic_matter">Aufbau der Materie</string>
+    <string name="topic_inorganic">Anorganische Verbindungen</string>
+    <string name="topic_energetics">Energetik</string>
+    <string name="topic_redox">Elektrochemie &amp; Redox</string>
+    <string name="topic_acids">Säure &amp; Basen</string>
+    <string name="topic_equilibrium">Gleichgewicht &amp; Kinetik</string>
+    <string name="topic_analytical">Analytische Methoden</string>
+    <string name="topic_fuels">Erdoel &amp; Organik</string>
+    <string name="topic_products">Produkte Organisch</string>
+    <string name="topic_biochemistry">Biochemie</string>
+    <string name="topic_reactions">Reaktionstypen Organik</string>
+
+    <!-- Calculators -->
+    <string name="calc_molar_mass">Molare Masse</string>
+    <string name="calc_ph">pH-Rechner</string>
+    <string name="calc_stoichiometry">Stöchiometrie</string>
+    <string name="calc_gas_laws">Gasgesetze</string>
+    <string name="calc_concentration">Konzentration</string>
+    <string name="calc_density">Dichte</string>
+    <string name="calc_dilution">Verdünnung</string>
+    <string name="calc_solubility">Löslichkeit</string>
+    <string name="calc_combustion">Verbrennung</string>
+    <string name="calc_redox">Redox-Potenzial</string>
+
+    <!-- Videos -->
+    <string name="videos_author">Zig\'s Chemistry 42</string>
+    <string name="videos_author_sub">Prof. Siegfried Schindler, JLU Gießen</string>
+    <string name="videos_all">Alle Videos</string>
+    <string name="videos_all_sub">15 Lernvideos, automatisch aktualisiert</string>
+    <string name="videos_body">Die Videos sind eingebettet in die jeweiligen Themenbereiche. Alle Rechte liegen beim Kanalbetreiber.</string>
+
+    <!-- More / Settings -->
+    <string name="settings_info">ℹ️ Info</string>
+    <string name="settings_version">Version 1.0.0</string>
+    <string name="settings_app_id">App-ID: ai.chemistry_learning_org</string>
+    <string name="settings_license">Lizenz: Apache-2.0</string>
+    <string name="settings_body">Die Inhalte stammen von chemie-lernen.org (Tobias Weiß). Die App ist ein Open-Source-Wrapper und bietet keine eigenen Inhalte.</string>
+    <string name="settings_links">🔗 Links</string>
+    <string name="link_website">Website</string>
+    <string name="link_imprint">Impressum</string>
+    <string name="link_privacy">Datenschutz</string>
 </resources>

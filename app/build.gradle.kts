@@ -12,13 +12,13 @@ val versionProps = Properties().apply {
 }
 
 android {
-    namespace = "org.chemie_lernen_org"
-    compileSdk = 35
+    namespace = "ai.chemistry_learning_org"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "org.chemie_lernen_org.free"
+        applicationId = "ai.chemistry_learning_org"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = (versionProps.getProperty("versionCode") ?: "1").toInt()
         versionName = versionProps.getProperty("versionName") ?: "1.0.0"
 
@@ -64,6 +64,11 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release") // null → unsigned (F-Droid)
+            ndk {
+                // Native debug symbols (libandroidx.graphics.path.so) for Google Play
+                // crash/ANR analysis — upload symbols.zip with the AAB in Play Console.
+                debugSymbolLevel = "FULL"
+            }
         }
         debug {
             isMinifyEnabled = false
