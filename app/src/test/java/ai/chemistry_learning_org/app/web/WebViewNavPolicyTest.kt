@@ -86,6 +86,11 @@ class WebViewNavPolicyTest {
     }
 
     @Test
+    fun `blocks url without host (fail closed)`() {
+        assertThat(decide("https://")).isEqualTo(WebViewNavPolicy.Decision.BLOCK)
+    }
+
+    @Test
     fun `blocks null blank and relative input (fail closed)`() {
         assertThat(decide(null)).isEqualTo(WebViewNavPolicy.Decision.BLOCK)
         assertThat(decide("")).isEqualTo(WebViewNavPolicy.Decision.BLOCK)

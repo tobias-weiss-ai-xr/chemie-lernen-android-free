@@ -62,6 +62,7 @@ class SiteUrlsTest {
 
     @Test
     fun `fixed page urls are correct`() {
+        assertThat(SiteUrls.home()).isEqualTo("https://chemie-lernen.org")
         assertThat(SiteUrls.videos()).isEqualTo("https://chemie-lernen.org/lernvideos/")
         assertThat(SiteUrls.knowledgeGraph()).isEqualTo("https://chemie-lernen.org/wissensnetz/")
         assertThat(SiteUrls.privacy()).isEqualTo("https://chemie-lernen.org/datenschutz/")
