@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.rotate
 import ai.chemistry_learning_org.R
 
-private data class Calculator(@StringRes val titleRes: Int, val url: String, val icon: String)
+internal data class Calculator(@StringRes val titleRes: Int, val url: String, val icon: String)
 
-private val calculators = listOf(
+internal val calculators = listOf(
     Calculator(R.string.calc_molar_mass, "/molar-masse-rechner/", "\u2697"),
     Calculator(R.string.calc_ph, "/ph-rechner/", "\u26a1"),
     Calculator(R.string.calc_stoichiometry, "/reaktionsgleichungen-ausgleichen/", "\u2697"),

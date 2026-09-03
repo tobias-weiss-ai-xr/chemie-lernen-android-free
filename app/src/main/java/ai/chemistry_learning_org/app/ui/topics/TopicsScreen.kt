@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.rotate
 import ai.chemistry_learning_org.R
 
-private data class Topic(@StringRes val titleRes: Int, val url: String, val icon: String)
+internal data class Topic(@StringRes val titleRes: Int, val url: String, val icon: String)
 
-private val topics = listOf(
+internal val topics = listOf(
     Topic(R.string.topic_introduction, "/themenbereiche/einfuehrung-chemie/", "\u2728"),
     Topic(R.string.topic_matter, "/themenbereiche/aufbau-materie/", "\u2697\ufe0f"),
     Topic(R.string.topic_inorganic, "/themenbereiche/anorganische-verbindungen/", "\u269b\ufe0f"),
