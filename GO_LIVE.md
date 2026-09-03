@@ -9,7 +9,7 @@ Stand: **2026-09-02** · Branch `main` (gepusht)
 | 1 | Versionierung via `version.properties` (Single Source of Truth) | ✅ |
 | 2 | Signing-Config (F-Droid-sicher: unsigniert ohne Env) | ✅ |
 | 3 | Release-Keystore `chemie-lernen-release.jks` + `.keystore.env` (gitignored) | ✅ |
-| 4 | Keystore-Backup `E:\backup-recovery\chemie-lernen-keystore\` | ✅ |
+| 4 | Keystore-Backup: **Primär** `C:\Users\Tobias\secrets\chemie-lernen-play\` · Spiegel `E:\backup-recovery\chemie-lernen-keystore\` | ✅ |
 | 5 | Unit-Tests (17): WebUrlPolicy-Whitelist + Navigation | ✅ |
 | 6 | Quality Gate (Lint + Tests + Debug-Build) | ✅ |
 | 7 | Release-Skripte: `build-release.sh`, `release-pipeline.sh`, `publish-release.sh` | ✅ |
@@ -20,7 +20,7 @@ Stand: **2026-09-02** · Branch `main` (gepusht)
 | 12 | Privacy Policy Text (Repo) + Live-URL `https://chemie-lernen.org/datenschutz` (HTTP 200) | ✅ |
 | 13 | Google Play Developer Account ($25) | ⛔ **Manuell im Browser** |
 | 14 | App in Play Console anlegen | ⛔ **Manuell im Browser** |
-| 15 | GitHub Actions Secrets (4×) | ⛔ Werte in `E:\backup-recovery\chemie-lernen-keystore\.keystore.env`, Anleitung `SECRETS_SETUP.md` |
+| 15 | GitHub Actions Secrets (4×) | ⛔ Werte in **Primärablage** `C:\Users\Tobias\secrets\chemie-lernen-play\github-secrets.env`, Anleitung `SECRETS_SETUP.md` |
 | 16 | Tentative: Play App Signing aktivieren | ⛔ nach App-Erstellung |
 | 17 | Publishing via API (Service-Account) | ⛔ wartet auf `google-play-api-key.json` |
 | 18 | Review starten | ⛔ nach Upload |
@@ -37,7 +37,7 @@ Stand: **2026-09-02** · Branch `main` (gepusht)
 ### A) CI Secrets setzen (~2 min, Browser)
 GitHub → `tobias-weiss-ai-xr/chemie-lernen-android-free` → Settings → Secrets → **4×**:
 `CHEMIELERNEN_RELEASE_KEYSTORE_B64`, `_STORE_PASSWORD`, `_KEY_PASSWORD`, `_KEY_ALIAS`
-Werte: `E:\backup-recovery\chemie-lernen-keystore\.keystore.env` · Anleitung: `SECRETS_SETUP.md`
+Werte: `C:\Users\Tobias\secrets\chemie-lernen-play\github-secrets.env` (4 fertige Einträge) · Anleitung: `SECRETS_SETUP.md`
 
 ### B) Play Console einrichten (~30 min, Browser)
 Anleitung komplett: `PLAY_CONSOLE_CHECKLIST.md` + `GOOGLE_PLAY_API_SETUP.md`
@@ -54,5 +54,6 @@ Anleitung komplett: `PLAY_CONSOLE_CHECKLIST.md` + `GOOGLE_PLAY_API_SETUP.md`
 ## Wichtig
 - `versionCode` UND `versionName` in `version.properties` ÄNDERN → F-Droid-Metadata
   `metadata/org.chemie_lernen_org.free.yml` **synchron halten** (F-Droid liest daraus).
-- Keystore-Verlust = keine Updates mehr. Backup liegt in `E:\backup-recovery\chemie-lernen-keystore\`
-  (zusätzlich zweites Medium, z. B. verschlüsseltes Backup).
+- Keystore-Verlust = keine Updates mehr. **Primär:** `C:\Users\Tobias\secrets\chemie-lernen-play\`
+  (Arbeitskopie im Repo-Root; E:\backup-recovery\chemie-lernen-keystore\ ist nur Backup-Spiegel,
+  zusätzlich zweites Medium, z. B. verschlüsseltes Backup).
