@@ -75,4 +75,26 @@
     <string name="link_website">Website</string>
     <string name="link_imprint">Impressum</string>
     <string name="link_privacy">Datenschutz</string>
+    <string name="kg_title">Wissensnetz</string>
+    <string name="kg_search_hint">Begriff suchen…</string>
+    <string name="kg_all">Alle</string>
+    <string name="kg_retry">Erneut versuchen</string>
+    <string name="kg_error">Das Wissensnetz konnte nicht geladen werden.</string>
+    <string name="kg_offline">Offline — gespeicherte Daten.</string>
+    <string name="kg_no_results">Keine Treffer.</string>
+    <string name="kg_related_terms">Verwandte Begriffe</string>
+    <string name="kg_related_articles">Dazugehörige Artikel</string>
+    <string name="kg_relations">%d Verbindungen</string>
+    <string name="cat_stoff">Stoffe</string>
+    <string name="cat_konzept">Konzepte</string>
+    <string name="cat_reaktion">Reaktionen</string>
+    <string name="cat_methode">Methoden</string>
+    <string name="cat_person">Personen</string>
+    <string name="cat_didaktik">Didaktik</string>
+    <string name="cat_lehrplan">Lehrpläne</string>
+    <string name="cat_kmk">KMK-Standards</string>
+    <string name="cat_quelle">Quellen</string>
+    <string name="cat_other">Sonstige</string>
+    <string name="kg_computing">3D-Layout wird berechnet…</string>
+    <string name="kg_reset_view">Ansicht zurücksetzen</string>
 </resources>

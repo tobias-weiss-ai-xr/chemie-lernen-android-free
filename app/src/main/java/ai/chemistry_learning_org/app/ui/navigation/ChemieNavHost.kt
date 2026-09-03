@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ai.chemistry_learning_org.R
 import ai.chemistry_learning_org.app.ui.home.HomeScreen
+import ai.chemistry_learning_org.app.ui.kg.KnowledgeGraphScreen
 import ai.chemistry_learning_org.app.ui.topics.TopicsScreen
 import ai.chemistry_learning_org.app.ui.calculators.CalculatorsScreen
 import ai.chemistry_learning_org.app.ui.videos.VideosScreen
@@ -24,6 +25,7 @@ object Routes {
     const val TOPICS = "topics"
     const val CALCULATORS = "calculators"
     const val VIDEOS = "videos"
+    const val KNOWLEDGE_GRAPH = "knowledgegraph"
     const val SETTINGS = "settings"
     const val WEBVIEW = "webview/{url}/{title}"
 
@@ -102,6 +104,7 @@ fun ChemieNavHost() {
                     onOpenTopics = { navController.navigate(Routes.TOPICS) },
                     onOpenCalculators = { navController.navigate(Routes.CALCULATORS) },
                     onOpenVideos = { navController.navigate(Routes.VIDEOS) },
+                    onOpenKnowledgeGraph = { navController.navigate(Routes.KNOWLEDGE_GRAPH) },
                     onOpenUrl = { url, title -> navController.navigate(Routes.webview(url, title)) },
                 )
             }
@@ -127,6 +130,12 @@ fun ChemieNavHost() {
                 SettingsScreen(
                     onBack = { navController.popBackStack() },
                     onOpenUrl = { url, title -> navController.navigate(Routes.webview(url, title)) },
+                )
+            }
+            composable(Routes.KNOWLEDGE_GRAPH) {
+                KnowledgeGraphScreen(
+                    onBack = { navController.popBackStack() },
+                    onOpenArticle = { url, title -> navController.navigate(Routes.webview(url, title)) },
                 )
             }
             composable(Routes.WEBVIEW) { backStackEntry ->

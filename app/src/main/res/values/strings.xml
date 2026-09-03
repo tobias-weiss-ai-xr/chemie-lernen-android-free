@@ -75,4 +75,26 @@
     <string name="link_website">Website</string>
     <string name="link_imprint">Imprint</string>
     <string name="link_privacy">Privacy Policy</string>
+    <string name="kg_title">Knowledge Network</string>
+    <string name="kg_search_hint">Search terms…</string>
+    <string name="kg_all">All</string>
+    <string name="kg_retry">Retry</string>
+    <string name="kg_error">The knowledge network could not be loaded.</string>
+    <string name="kg_offline">Offline — showing saved data.</string>
+    <string name="kg_no_results">No matches.</string>
+    <string name="kg_related_terms">Related terms</string>
+    <string name="kg_related_articles">Related articles</string>
+    <string name="kg_relations">%d connections</string>
+    <string name="cat_stoff">Substances</string>
+    <string name="cat_konzept">Concepts</string>
+    <string name="cat_reaktion">Reactions</string>
+    <string name="cat_methode">Methods</string>
+    <string name="cat_person">People</string>
+    <string name="cat_didaktik">Didactics</string>
+    <string name="cat_lehrplan">Curricula</string>
+    <string name="cat_kmk">KMK standards</string>
+    <string name="cat_quelle">Sources</string>
+    <string name="cat_other">Other</string>
+    <string name="kg_computing">Computing 3D layout…</string>
+    <string name="kg_reset_view">Reset view</string>
 </resources>

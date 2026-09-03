@@ -35,17 +35,17 @@ fun HomeScreen(
     onOpenTopics: () -> Unit,
     onOpenCalculators: () -> Unit,
     onOpenVideos: () -> Unit,
+    onOpenKnowledgeGraph: () -> Unit,
     onOpenUrl: (String, String) -> Unit,
 ) {
     // NOTE: Single LazyVerticalGrid — nested scrolling containers (LazyGrid inside
     // Column(verticalScroll)) crash with "infinity maximum height constraints".
-    val networkTitle = stringResource(R.string.home_action_network)
     val actions = listOf(
         QuickAction(Icons.Default.MenuBook, R.string.home_action_topics, R.string.home_action_topics_sub) { onOpenTopics() },
         QuickAction(Icons.Default.Calculate, R.string.home_action_calculators, R.string.home_action_calculators_sub) { onOpenCalculators() },
         QuickAction(Icons.Default.VideoLibrary, R.string.home_action_videos, R.string.home_action_videos_sub) { onOpenVideos() },
         QuickAction(Icons.Default.School, R.string.home_action_network, R.string.home_action_network_sub) {
-            onOpenUrl(SiteUrls.knowledgeGraph(), networkTitle)
+            onOpenKnowledgeGraph()
         },
     )
 

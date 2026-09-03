@@ -26,7 +26,7 @@ class SiteUrlsTest {
     fun `every built url passes the whitelist`() {
         val candidates = listOf(
             "", "/", "/themenbereiche/energetik/", "/lernvideos/",
-            "/wissensnetz/", "/impressum/", "/datenschutz/",
+            "/impressum/", "/datenschutz/",
         )
         for (path in candidates) {
             val url = SiteUrls.resolve(path)
@@ -61,10 +61,17 @@ class SiteUrlsTest {
     // ---------------- convenience urls ----------------
 
     @Test
+    fun `kg api url is built on the allowed host with pagination params`() {
+        assertThat(SiteUrls.apiKgData(400, 200))
+            .isEqualTo("https://chemie-lernen.org/api/kg-data?offset=400&limit=200")
+        assertThat(SiteUrls.apiKgData(0))
+            .isEqualTo("https://chemie-lernen.org/api/kg-data?offset=0&limit=200")
+    }
+
+    @Test
     fun `fixed page urls are correct`() {
         assertThat(SiteUrls.home()).isEqualTo("https://chemie-lernen.org")
         assertThat(SiteUrls.videos()).isEqualTo("https://chemie-lernen.org/lernvideos/")
-        assertThat(SiteUrls.knowledgeGraph()).isEqualTo("https://chemie-lernen.org/wissensnetz/")
         assertThat(SiteUrls.privacy()).isEqualTo("https://chemie-lernen.org/datenschutz/")
         assertThat(SiteUrls.imprint()).isEqualTo("https://chemie-lernen.org/impressum/")
     }

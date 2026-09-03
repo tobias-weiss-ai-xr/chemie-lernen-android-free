@@ -30,8 +30,8 @@ Description: |-
 RequiresRoot: 'no'
 
 Builds:
-  - versionName: "1.0.3"
-    versionCode: 4
+  - versionName: "1.0.4"
+    versionCode: 5
     commit: a39bfdc
     subdir: app
     gradle: yes
@@ -39,5 +39,5 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: HTTP
-CurrentVersion: "1.0.3"
-CurrentVersionCode: 4
+CurrentVersion: "1.0.4"
+CurrentVersionCode: 5

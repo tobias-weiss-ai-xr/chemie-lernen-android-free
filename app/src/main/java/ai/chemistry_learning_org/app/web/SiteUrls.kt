@@ -20,7 +20,10 @@ object SiteUrls {
 
     fun home(): String = BASE
     fun videos(): String = resolve("/lernvideos/")
-    fun knowledgeGraph(): String = resolve("/wissensnetz/")
     fun privacy(): String = resolve("/datenschutz/")
     fun imprint(): String = resolve("/impressum/")
+
+    /** Knowledge-graph API (Neo4j backend), paginated. */
+    fun apiKgData(offset: Int, limit: Int = 200): String =
+        "$BASE/api/kg-data?offset=$offset&limit=$limit"
 }
