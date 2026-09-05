@@ -54,9 +54,11 @@ object KgCategories {
         val centerName = entity.name.lowercase()
         val related = entity.related
             .sortedByDescending { it.name.length } // stable, deterministic order
+        // The API can return the same article for several entity mentions —
+        // dedupe by URL so LazyColumn keys stay unique (crash otherwise).
         val articles = allArticles.filter { article ->
             article.entities.any { it.lowercase() == centerName }
-        }
+        }.distinctBy { it.url }
         return Center(entity, related, articles)
     }
 }

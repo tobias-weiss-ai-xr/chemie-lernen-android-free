@@ -63,4 +63,20 @@ class KgCategoriesTest {
         val c2 = KgCategories.buildCenter(e, articles)
         assertThat(c1.related.map { it.name }).isEqualTo(c2.related.map { it.name })
     }
+
+    @Test
+    fun `buildCenter dedupes articles by url`() {
+        // The kg API returns the same article once per entity mention — duplicate
+        // URLs must be collapsed or LazyColumn key = url crashes (IllegalArgumentException).
+        val articles = listOf(
+            KgArticle("Wasser", "https://chemie-lernen.org/wasser/", listOf("wasser")),
+            KgArticle("Wasser (Duplikat)", "https://chemie-lernen.org/wasser/", listOf("wasser", "h2o")),
+            KgArticle("Anderer", "https://chemie-lernen.org/x/", listOf("wasser")),
+        )
+        val center = KgCategories.buildCenter(entity("Wasser", "stoff"), articles)
+        assertThat(center.articles.map { it.url }.toSet()).hasSize(center.articles.size)
+        assertThat(center.articles).hasSize(2)
+        // first occurrence wins (API order preserved)
+        assertThat(center.articles[0].title).isEqualTo("Wasser")
+    }
 }

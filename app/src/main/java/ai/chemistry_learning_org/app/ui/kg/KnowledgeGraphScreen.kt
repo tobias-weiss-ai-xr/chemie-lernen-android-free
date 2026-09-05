@@ -204,15 +204,18 @@ fun KnowledgeGraphScreen(
 
     LaunchedEffect(Unit) { load() }
 
-    // Auto-rotate while nothing is selected and in Ready state
-    // Restarts when is3D changes (via key) so rotation continues with new orientation
+    // Auto-rotate while nothing is selected and the 3D view is showing.
+    // ~1e-10 rad/ns = 0.1 rad/s ≈ 63 s per revolution — slow enough to read labels.
+    // Restarts when is3D changes (via key) so rotation continues with new orientation.
+    // 2D is a static top-down view: rotating yaw there spins the whole planar disc.
     LaunchedEffect((state as? KgUiState.Ready)?.is3D) {
         if (state !is KgUiState.Ready) return@LaunchedEffect
         var last = 0L
         while (true) {
             withFrameNanos { now ->
-                if (last != 0L && selectedIndex == null) {
-                    camera = camera.copy(yaw = camera.yaw + (now - last) * 0.00000005)
+                val ready = state as? KgUiState.Ready
+                if (last != 0L && selectedIndex == null && ready?.is3D == true) {
+                    camera = camera.copy(yaw = camera.yaw + (now - last) * 1e-10)
                 }
                 last = now
             }
