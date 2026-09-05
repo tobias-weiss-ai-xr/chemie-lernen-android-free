@@ -1,1 +1,1 @@
-New: the knowledge graph is now an interactive 3D network — 500+ terms, rotate, zoom, explore. 12 chemistry topics, 10+ calculators (molar mass, pH, stoichiometry), 15 videos — free, no ads, no tracking.
+New: Knowledge Network as interactive Ego Graph – pick a term and explore its neighborhood in 2D or 3D. 500+ terms, rotate, zoom, discover. 12 chemistry topics, 10+ calculators (molar mass, pH, stoichiometry), 15 videos — free, no ads, no tracking.
