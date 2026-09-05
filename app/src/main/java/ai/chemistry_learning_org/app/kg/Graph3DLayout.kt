@@ -36,12 +36,23 @@ object Graph3DLayout {
         val gravity: Double = 0.028,
         val damping: Double = 0.86,
         val dt: Double = 0.016,
+        /** Planar mode: forces act in the x/y plane, z is forced to 0. */
+        val planar: Boolean = false,
     )
 
-    /** Deterministic initial placement on a Fibonacci sphere. */
-    fun initialPositions(count: Int, radius: Double = 120.0): List<Vec3> {
+    /** Deterministic initial placement: Fibonacci sphere (3D) or disc (planar). */
+    fun initialPositions(count: Int, radius: Double = 120.0, planar: Boolean = false): List<Vec3> {
         require(count >= 0)
         if (count == 0) return emptyList()
+        if (planar) {
+            // deterministic sunflower (Vogel) disc
+            val golden = Math.PI * (3.0 - sqrt(5.0))
+            return (0 until count).map { i ->
+                val r = radius * sqrt((i + 0.5) / count)
+                val theta = golden * i
+                Vec3(Math.cos(theta) * r, Math.sin(theta) * r, 0.0)
+            }
+        }
         val golden = Math.PI * (3.0 - sqrt(5.0))
         return (0 until count).map { i ->
             val y = if (count == 1) 0.0 else 1.0 - (2.0 * i) / (count - 1)
@@ -56,7 +67,7 @@ object Graph3DLayout {
         if (n == 0) return emptyList()
         if (n == 1) return listOf(Vec3.ZERO)
 
-        val pos = initialPositions(n).toMutableList()
+        val pos = initialPositions(n, planar = config.planar).toMutableList()
         val vel = MutableList(n) { Vec3.ZERO }
         val weights = DoubleArray(n) { sqrt(input.nodes[it].relationCount.coerceAtLeast(1).toDouble()) }
 
@@ -92,6 +103,7 @@ object Graph3DLayout {
                 val f = forces[i] + toCenter * (config.gravity * weights[i])
                 vel[i] = (vel[i] + f * config.dt) * config.damping
                 pos[i] += vel[i] * config.dt
+                if (config.planar) pos[i] = Vec3(pos[i].x, pos[i].y, 0.0)
             }
         }
         return pos

@@ -64,4 +64,64 @@ class KgGraphDataTest {
         val graph = KgGraphData.build(snapshot)
         assertThat(graph.index["x"]).isEqualTo(0)
     }
+
+    @Test
+    fun `buildEgo - center plus one-hop neighbors with cross edges`() {
+        val snapshot = KgSnapshot(
+            entities = listOf(
+                entity("Wasser", "wasserstoff", "sauerstoff", "unbekannt"),
+                entity("Wasserstoff", "wasser"),
+                entity("Sauerstoff"),
+                entity("Fremd"),
+            ),
+            articles = listOf(KgArticle("t", "u", emptyList())),
+        )
+        val full = KgGraphData.build(snapshot)
+        val ego = KgGraphData.buildEgo(full, "Wasser")!!
+        assertThat(ego.nodes.map { it.name }).containsExactly("Wasser", "Wasserstoff", "Sauerstoff").inOrder()
+        assertThat(ego.index).containsEntry("wasser", 0)
+        assertThat(ego.index).containsEntry("sauerstoff", 2)
+        // Zentrum-Speichen; Kreuzkante Wasserstoff->Wasser wird dedupliziert (0-1 existiert); "unbekannt"/"Fremd" nicht drin
+        assertThat(ego.edges).containsExactly(0 to 1, 0 to 2).inOrder()
+        assertThat(ego.articles).hasSize(1)
+    }
+
+    @Test
+    fun `buildEgo - dedupes mutual edges and self references`() {
+        val snapshot = KgSnapshot(
+            entities = listOf(entity("A", "b"), entity("B", "a", "a")),
+            articles = emptyList(),
+        )
+        val ego = KgGraphData.buildEgo(KgGraphData.build(snapshot), "A")!!
+        assertThat(ego.edges).containsExactly(0 to 1)
+    }
+
+    @Test
+    fun `buildEgo - unknown center returns null`() {
+        val full = KgGraphData.build(KgSnapshot(entities = listOf(entity("A")), articles = emptyList()))
+        assertThat(KgGraphData.buildEgo(full, "Nein")).isNull()
+    }
+
+    @Test
+    fun `planar layout keeps z at zero and spreads nodes`() {
+        val nodes = (0 until 30).map { entity("N$it", if (it < 29) "n${it + 1}" else "n0") }
+        val input = Graph3DLayout.Input(nodes, (0 until 30).map { it to (it + 1) % 30 })
+        val positions = Graph3DLayout.compute(input, Graph3DLayout.Config(iterations = 120, planar = true))
+        assertThat(positions).hasSize(30)
+        positions.forEach { assertThat(it.z).isEqualTo(0.0) }
+        // Streuung: minimale Paardistanz deutlich > 0
+        var minD = Double.MAX_VALUE
+        for (i in positions.indices) for (j in i + 1 until positions.size) {
+            minD = minOf(minD, (positions[j] - positions[i]).length())
+        }
+        assertThat(minD).isGreaterThan(10.0)
+    }
+
+    @Test
+    fun `planar initial positions are deterministic and disc-shaped`() {
+        val a = Graph3DLayout.initialPositions(12, planar = true)
+        val b = Graph3DLayout.initialPositions(12, planar = true)
+        assertThat(a).isEqualTo(b)
+        a.forEach { assertThat(it.z).isEqualTo(0.0) }
+    }
 }

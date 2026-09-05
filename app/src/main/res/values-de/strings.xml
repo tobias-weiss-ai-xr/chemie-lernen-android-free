@@ -95,6 +95,7 @@
     <string name="cat_kmk">KMK-Standards</string>
     <string name="cat_quelle">Quellen</string>
     <string name="cat_other">Sonstige</string>
-    <string name="kg_computing">3D-Layout wird berechnet…</string>
     <string name="kg_reset_view">Ansicht zurücksetzen</string>
+    <string name="kg_pick_hint">Wähle einen Begriff, um sein Umfeld zu erkunden.</string>
+    <string name="kg_toggle_projection">2D-/3D-Ansicht umschalten</string>
 </resources>

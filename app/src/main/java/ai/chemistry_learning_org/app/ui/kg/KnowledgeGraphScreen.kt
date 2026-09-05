@@ -42,6 +42,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,12 +57,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,27 +80,31 @@ import ai.chemistry_learning_org.app.kg.KgCategories
 import ai.chemistry_learning_org.app.kg.KgGraphData
 import ai.chemistry_learning_org.app.kg.KnowledgeGraphRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.URL
+import kotlin.math.min
 import kotlin.math.sqrt
 
 private data class Camera(val yaw: Double, val pitch: Double, val zoom: Float) {
     companion object {
-        val DEFAULT = Camera(yaw = 0.7, pitch = 0.35, zoom = 1f)
+        val THREE_D = Camera(yaw = 0.7, pitch = 0.35, zoom = 1f)
+        val TWO_D = Camera(yaw = 0.0, pitch = 0.0, zoom = 1f)
     }
 }
 
 private sealed interface KgUiState {
     data object Loading : KgUiState
 
-    /** Snapshot fetched and graph built; 3D layout still computing. */
-    data class Computing(val graph: KgGraphData.Graph, val fromCache: Boolean) : KgUiState
+    data class Picker(val graph: KgGraphData.Graph, val fromCache: Boolean) : KgUiState
 
     data class Ready(
-        val graph: KgGraphData.Graph,
+        val ego: KgGraphData.Graph,
         val positions: List<Graph3DLayout.Vec3>,
+        val centerName: String,
+        val is3D: Boolean,
         val fromCache: Boolean,
     ) : KgUiState
 
@@ -100,11 +112,11 @@ private sealed interface KgUiState {
 }
 
 /**
- * Native 3D knowledge graph (Wissensnetz): force-directed layout computed
- * on device from the platform kg-data API, rendered on a Compose Canvas.
- * Drag rotates, pinch zooms, tap selects a node and opens the detail card
- * with related terms and article deep links. Replaces the removed
- * /wissensnetz/ web page (404) — not a port of the web D3 view.
+ * Native knowledge-graph (Wissensnetz) screen: ego-graph exploration with
+ * per-term neighborhoods, 2D/3D toggle via planar layout config.
+ * Drag rotates (3D) or does nothing (2D), pinch zooms both, tap selects.
+ * Picker lets the user choose a starting term from the full kg dataset;
+ * Ready shows an ego graph (center plus 1-hop) with interactive canvas.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -114,12 +126,16 @@ fun KnowledgeGraphScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
     var state by remember { mutableStateOf<KgUiState>(KgUiState.Loading) }
+    var fullGraph by remember { mutableStateOf<KgGraphData.Graph?>(null) }
+    var fromCache by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
     var searchOpen by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
-    var camera by remember { mutableStateOf(Camera.DEFAULT) }
+    var camera by remember { mutableStateOf(Camera.THREE_D) }
+    var selectJob by remember { mutableStateOf<Job?>(null) }
 
     val repo = remember {
         KnowledgeGraphRepository(
@@ -131,28 +147,66 @@ fun KnowledgeGraphScreen(
     suspend fun load() {
         state = KgUiState.Loading
         selectedIndex = null
-        state = when (val result = repo.load()) {
-            is KnowledgeGraphRepository.LoadResult.Success ->
-                KgUiState.Computing(KgGraphData.build(result.snapshot), fromCache = false)
-            is KnowledgeGraphRepository.LoadResult.Offline ->
-                KgUiState.Computing(KgGraphData.build(result.snapshot), fromCache = true)
-            KnowledgeGraphRepository.LoadResult.Unavailable -> KgUiState.Unavailable
+        fromCache = false
+        selectJob?.cancel()
+        selectJob = null
+        when (val result = repo.load()) {
+            is KnowledgeGraphRepository.LoadResult.Success -> {
+                fullGraph = KgGraphData.build(result.snapshot)
+                fromCache = false
+                state = KgUiState.Picker(fullGraph!!, fromCache = false)
+            }
+            is KnowledgeGraphRepository.LoadResult.Offline -> {
+                fullGraph = KgGraphData.build(result.snapshot)
+                fromCache = true
+                state = KgUiState.Picker(fullGraph!!, fromCache = true)
+            }
+            KnowledgeGraphRepository.LoadResult.Unavailable -> {
+                state = KgUiState.Unavailable
+            }
+        }
+    }
+
+    fun selectCenter(name: String, threeD: Boolean) {
+        val full = fullGraph ?: return
+        val ego = KgGraphData.buildEgo(full, name) ?: return
+        selectJob?.cancel()
+        selectJob = null
+        selectedIndex = null
+        camera = if (threeD) Camera.THREE_D else Camera.TWO_D
+        selectJob = scope.launch {
+            val positions = withContext(Dispatchers.Default) {
+                Graph3DLayout.compute(
+                    Graph3DLayout.Input(ego.nodes, ego.edges),
+                    Graph3DLayout.Config(planar = !threeD),
+                )
+            }
+            state = KgUiState.Ready(ego, positions, ego.nodes[0].name, threeD, fromCache)
+        }
+    }
+
+    fun goBack() {
+        val s = state
+        when {
+            selectedIndex != null -> selectedIndex = null
+            s is KgUiState.Ready -> {
+                selectJob?.cancel()
+                selectJob = null
+                state = KgUiState.Picker(fullGraph ?: s.ego, fromCache)
+            }
+            searchOpen -> {
+                searchOpen = false
+                query = ""
+            }
+            else -> onBack()
         }
     }
 
     LaunchedEffect(Unit) { load() }
 
-    // heavy force-directed layout off the main thread (fixed iteration budget)
-    LaunchedEffect(state) {
-        val computing = state as? KgUiState.Computing ?: return@LaunchedEffect
-        val positions = withContext(Dispatchers.Default) {
-            Graph3DLayout.compute(Graph3DLayout.Input(computing.graph.nodes, computing.graph.edges))
-        }
-        state = KgUiState.Ready(computing.graph, positions, computing.fromCache)
-    }
-
-    // gentle auto-rotation while nothing is selected
-    LaunchedEffect(state) {
+    // Auto-rotate while nothing is selected and in Ready state
+    // Restarts when is3D changes (via key) so rotation continues with new orientation
+    LaunchedEffect((state as? KgUiState.Ready)?.is3D) {
         if (state !is KgUiState.Ready) return@LaunchedEffect
         var last = 0L
         while (true) {
@@ -165,26 +219,46 @@ fun KnowledgeGraphScreen(
         }
     }
 
-    BackHandler(enabled = selectedIndex != null) { selectedIndex = null }
+    // Dismiss detail card on system back
+    BackHandler(enabled = true) { goBack() }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.kg_title), maxLines = 1) },
                 navigationIcon = {
-                    IconButton(onClick = { if (selectedIndex != null) selectedIndex = null else onBack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                    IconButton(onClick = { goBack() }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back),
+                        )
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        searchOpen = !searchOpen
-                        if (!searchOpen) query = ""
-                    }) {
-                        Icon(Icons.Default.Search, contentDescription = stringResource(R.string.kg_search_hint))
-                    }
-                    IconButton(onClick = { camera = Camera.DEFAULT }) {
-                        Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.kg_reset_view))
+                    val s = state
+                    when (s) {
+                        KgUiState.Loading, KgUiState.Unavailable -> Unit
+                        is KgUiState.Picker -> {
+                            IconButton(onClick = { searchOpen = !searchOpen; if (!searchOpen) query = "" }) {
+                                Icon(Icons.Default.Search, contentDescription = stringResource(R.string.kg_search_hint))
+                            }
+                        }
+                        is KgUiState.Ready -> {
+                            val toggleDescription = stringResource(R.string.kg_toggle_projection)
+                            TextButton(
+                                onClick = { selectCenter(s.centerName, !s.is3D) },
+                                modifier = Modifier.clearAndSetSemantics {
+                                    contentDescription = toggleDescription
+                                },
+                            ) {
+                                Text(if (s.is3D) "3D" else "2D")
+                            }
+                            IconButton(onClick = {
+                                camera = if (s.is3D) Camera.THREE_D else Camera.TWO_D
+                            }) {
+                                Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.kg_reset_view))
+                            }
+                        }
                     }
                 },
             )
@@ -195,31 +269,14 @@ fun KnowledgeGraphScreen(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            when (val current = state) {
-                KgUiState.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-
-                is KgUiState.Computing -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            when (val s = state) {
+                KgUiState.Loading ->
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
-                        Spacer(Modifier.height(12.dp))
-                        Text(stringResource(R.string.kg_computing), style = MaterialTheme.typography.bodyMedium)
                     }
-                }
 
-                KgUiState.Unavailable -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(stringResource(R.string.kg_error), style = MaterialTheme.typography.bodyLarge)
-                        Spacer(Modifier.height(12.dp))
-                        Button(onClick = { scope.launch { load() } }) {
-                            Text(stringResource(R.string.kg_retry))
-                        }
-                    }
-                }
-
-                is KgUiState.Ready -> {
-                    if (current.fromCache) {
+                is KgUiState.Picker -> {
+                    if (s.fromCache) {
                         Text(
                             text = stringResource(R.string.kg_offline),
                             style = MaterialTheme.typography.labelSmall,
@@ -227,6 +284,12 @@ fun KnowledgeGraphScreen(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
                         )
                     }
+                    Text(
+                        text = stringResource(R.string.kg_pick_hint),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    )
                     if (searchOpen) {
                         Column(Modifier.padding(horizontal = 16.dp)) {
                             OutlinedTextField(
@@ -247,20 +310,20 @@ fun KnowledgeGraphScreen(
                                         label = { Text(stringResource(R.string.kg_all)) },
                                     )
                                 }
-                                items(KgCategories.chipOrder) { category ->
+                                items(KgCategories.chipOrder) { cat ->
                                     FilterChip(
-                                        selected = selectedCategory == category,
+                                        selected = selectedCategory == cat,
                                         onClick = {
                                             selectedCategory =
-                                                if (selectedCategory == category) null else category
+                                                if (selectedCategory == cat) null else cat
                                         },
-                                        label = { Text(stringResource(KgCategories.labelRes(category))) },
+                                        label = { Text(stringResource(KgCategories.labelRes(cat))) },
                                         leadingIcon = {
                                             Box(
                                                 Modifier
                                                     .size(10.dp)
                                                     .background(
-                                                        Color(KgCategories.colorHex(category)),
+                                                        Color(KgCategories.colorHex(cat)),
                                                         CircleShape,
                                                     ),
                                             )
@@ -269,34 +332,139 @@ fun KnowledgeGraphScreen(
                                 }
                             }
                         }
+                    } else {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
+                        ) {
+                            item {
+                                FilterChip(
+                                    selected = selectedCategory == null,
+                                    onClick = { selectedCategory = null },
+                                    label = { Text(stringResource(R.string.kg_all)) },
+                                )
+                            }
+                            items(KgCategories.chipOrder) { cat ->
+                                FilterChip(
+                                    selected = selectedCategory == cat,
+                                    onClick = {
+                                        selectedCategory = if (selectedCategory == cat) null else cat
+                                    },
+                                    label = { Text(stringResource(KgCategories.labelRes(cat))) },
+                                    leadingIcon = {
+                                        Box(
+                                            Modifier
+                                                .size(10.dp)
+                                                .background(
+                                                    Color(KgCategories.colorHex(cat)),
+                                                    CircleShape,
+                                                ),
+                                        )
+                                    },
+                                )
+                            }
+                        }
+                    }
+                    val filtered = remember(s.graph, query, selectedCategory) {
+                        val q = query.trim()
+                        s.graph.nodes
+                            .asSequence()
+                            .filter { selectedCategory == null || it.category.equals(selectedCategory, ignoreCase = true) }
+                            .filter { q.isEmpty() || it.name.contains(q, ignoreCase = true) }
+                            .sortedByDescending { it.relationCount }
+                            .take(200)
+                            .toList()
+                    }
+                    if (filtered.isEmpty()) {
+                        Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            Text(stringResource(R.string.kg_no_results), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    } else {
+                        LazyColumn(Modifier.weight(1f)) {
+                            items(filtered.size) { i ->
+                                val entity = filtered[i]
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { selectCenter(entity.name, threeD = true) }
+                                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Box(
+                                        Modifier
+                                            .size(12.dp)
+                                            .background(
+                                                Color(KgCategories.colorHex(entity.category)),
+                                                CircleShape,
+                                            ),
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Column(Modifier.weight(1f)) {
+                                        Text(
+                                            text = entity.name,
+                                            style = MaterialTheme.typography.bodyLarge,
+                                        )
+                                        Text(
+                                            text = stringResource(KgCategories.labelRes(entity.category ?: "")) +
+                                                " \u00B7 " +
+                                                stringResource(R.string.kg_relations, entity.relationCount),
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                is KgUiState.Ready -> {
+                    if (s.fromCache) {
+                        Text(
+                            text = stringResource(R.string.kg_offline),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                        )
                     }
                     Box(Modifier.weight(1f)) {
                         GraphCanvas(
-                            graph = current.graph,
-                            positions = current.positions,
+                            graph = s.ego,
+                            positions = s.positions,
+                            is3D = s.is3D,
                             camera = camera,
                             onCamera = { camera = it },
-                            query = query,
-                            selectedCategory = selectedCategory,
                             selectedIndex = selectedIndex,
                             onSelect = { selectedIndex = it },
                         )
                         selectedIndex?.let { idx ->
-                            if (idx in current.graph.nodes.indices) {
+                            if (idx in s.ego.nodes.indices) {
                                 NodeDetailCard(
-                                    graph = current.graph,
+                                    graph = s.ego,
                                     nodeIndex = idx,
                                     modifier = Modifier.align(Alignment.BottomCenter),
                                     onClose = { selectedIndex = null },
-                                    onFocus = { name ->
-                                        selectedIndex = current.graph.index[name.lowercase()] ?: idx
-                                    },
+                                    onFocus = { name -> selectCenter(name, s.is3D) },
                                     onOpenArticle = onOpenArticle,
                                 )
                             }
                         }
                     }
                 }
+
+                KgUiState.Unavailable ->
+                    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                stringResource(R.string.kg_error),
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Button(onClick = { scope.launch { load() } }) {
+                                Text(stringResource(R.string.kg_retry))
+                            }
+                        }
+                    }
             }
         }
     }
@@ -306,29 +474,39 @@ fun KnowledgeGraphScreen(
 private fun GraphCanvas(
     graph: KgGraphData.Graph,
     positions: List<Graph3DLayout.Vec3>,
+    is3D: Boolean,
     camera: Camera,
     onCamera: (Camera) -> Unit,
-    query: String,
-    selectedCategory: String?,
     selectedIndex: Int?,
     onSelect: (Int?) -> Unit,
 ) {
     val currentCamera by rememberUpdatedState(camera)
+    val currentIs3D by rememberUpdatedState(is3D)
+    val onSurface = MaterialTheme.colorScheme.onSurface
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
+    val textMeasurer = rememberTextMeasurer(cacheSize = 128)
+
+    val labelStyle = TextStyle(
+        fontSize = 10.sp,
+        color = onSurface,
+        textAlign = TextAlign.Center,
+        shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(1f, 1f), blurRadius = 2f),
+    )
+    val centerLabelStyle = labelStyle.copy(fontWeight = FontWeight.Bold)
 
     Canvas(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(graph, positions) {
+            .pointerInput(graph, positions, is3D) {
                 detectTapGestures { offset ->
                     val cam = currentCamera
-                    val o = Graph3DProjector.Orientation(cam.yaw, cam.pitch, cam.zoom.toDouble())
+                    val threeD = currentIs3D
+                    val size = size
+                    val o = viewOrientation(cam, threeD, size.width.toFloat(), size.height.toFloat(), positions)
                     var best = -1
                     var bestDist = Double.MAX_VALUE
                     for (i in positions.indices) {
-                        val sp = Graph3DProjector.project(
-                            positions[i], o, size.width.toFloat(), size.height.toFloat(),
-                        )
+                        val sp = Graph3DProjector.project(positions[i], o, size.width.toFloat(), size.height.toFloat())
                         val dx = (sp.x - offset.x).toDouble()
                         val dy = (sp.y - offset.y).toDouble()
                         val d2 = dx * dx + dy * dy
@@ -337,17 +515,20 @@ private fun GraphCanvas(
                             best = i
                         }
                     }
-                    val threshold = 36.dp.toPx().toDouble()
+                    val threshold = 40.dp.toPx().toDouble()
                     onSelect(if (best >= 0 && bestDist <= threshold * threshold) best else null)
                 }
             }
-            .pointerInput(Unit) {
+            .pointerInput(is3D) {
                 detectTransformGestures { _, pan, zoom, _ ->
                     val cam = currentCamera
+                    val threeD = currentIs3D
                     onCamera(
-                        cam.copy(
+                        if (threeD) cam.copy(
                             yaw = cam.yaw + pan.x * 0.006,
                             pitch = (cam.pitch + pan.y * 0.006).coerceIn(-1.5, 1.5),
+                            zoom = (cam.zoom * zoom).coerceIn(0.35f, 5f),
+                        ) else cam.copy(
                             zoom = (cam.zoom * zoom).coerceIn(0.35f, 5f),
                         ),
                     )
@@ -356,47 +537,43 @@ private fun GraphCanvas(
     ) {
         val n = positions.size
         if (n == 0) return@Canvas
+
         val w = size.width
         val h = size.height
         val cam = currentCamera
-        val o = Graph3DProjector.Orientation(cam.yaw, cam.pitch, cam.zoom.toDouble())
+        val o = viewOrientation(cam, is3D, w, h, positions)
 
         val px = FloatArray(n)
         val py = FloatArray(n)
         val pd = FloatArray(n)
         val ps = FloatArray(n)
+        val pr = FloatArray(n)
         for (i in 0 until n) {
             val sp = Graph3DProjector.project(positions[i], o, w, h)
             px[i] = sp.x
             py[i] = sp.y
             pd[i] = sp.depth
             ps[i] = sp.scale
-        }
-
-        val q = query.trim()
-        val bright = BooleanArray(n)
-        for (i in 0 until n) {
             val node = graph.nodes[i]
-            bright[i] = (selectedCategory == null || node.category == selectedCategory) &&
-                (q.isEmpty() || node.name.contains(q, ignoreCase = true))
+            val weight = sqrt(node.relationCount.coerceAtLeast(1).toDouble()).toFloat()
+            pr[i] = (3.dp.toPx() * (1f + weight * 0.20f) * ps[i] * (0.55f + 0.65f * pd[i]) * o.zoom.toFloat()).coerceAtMost(28.dp.toPx())
         }
 
         val sel = selectedIndex?.takeIf { it in 0 until n }
+
+        // Draw edges: painter's order (far to near only matters in 3D; in 2D all depth=1)
         val strokeUnit = 1.dp.toPx()
         for ((a, b) in graph.edges) {
-            val highlighted = sel != null && (a == sel || b == sel)
-            if (sel != null && !highlighted && !bright[a] && !bright[b]) continue
             val depth = (pd[a] + pd[b]) / 2f
-            val color: Color
-            val alpha: Float
-            if (highlighted) {
+            val highlighted = sel != null && (a == sel || b == sel)
+            if (sel != null && !highlighted) continue
+            val color = if (highlighted) {
                 val other = if (a == sel) b else a
-                color = Color(KgCategories.colorHex(graph.nodes[other].category))
-                alpha = 0.85f
+                Color(KgCategories.colorHex(graph.nodes[other].category))
             } else {
-                color = onSurfaceVariant
-                alpha = (0.04f + 0.20f * depth) * if (bright[a] || bright[b]) 1f else 0.2f
+                onSurfaceVariant
             }
+            val alpha = if (highlighted) 0.85f else if (is3D) 0.04f + 0.20f * depth else 0.30f
             drawLine(
                 color = color.copy(alpha = alpha),
                 start = Offset(px[a], py[a]),
@@ -406,30 +583,69 @@ private fun GraphCanvas(
             )
         }
 
-        // painter's order: far nodes first
+        // Draw nodes
         val order = (0 until n).sortedBy { pd[it] }
-        val baseR = 3.dp.toPx()
         for (i in order) {
             val node = graph.nodes[i]
-            val weight = sqrt(node.relationCount.coerceAtLeast(1).toDouble()).toFloat()
-            val radius = baseR * (1f + weight * 0.20f) * ps[i] * (0.55f + 0.65f * pd[i])
             val center = Offset(px[i], py[i])
             val color = Color(KgCategories.colorHex(node.category))
             val alpha = when {
                 i == sel -> 1f
-                bright[i] -> 0.45f + 0.55f * pd[i]
-                else -> 0.05f + 0.07f * pd[i]
+                else -> 0.45f + 0.55f * pd[i]
             }
-            drawCircle(color = color.copy(alpha = alpha), radius = radius, center = center)
+            drawCircle(color = color.copy(alpha = alpha), radius = pr[i], center = center)
             if (i == sel) {
                 drawCircle(
                     color = color,
-                    radius = radius + 3.dp.toPx(),
+                    radius = pr[i] + 3.dp.toPx(),
                     center = center,
                     style = Stroke(width = 2.dp.toPx()),
                 )
             }
         }
+
+        // Draw labels for ego graphs (nodes <= 60)
+        if (n <= 60) {
+            for (i in order) {
+                if (is3D && pd[i] < 0.35f) continue
+                val node = graph.nodes[i]
+                var label = node.name
+                if (label.length > 20) label = label.take(19) + "\u2026"
+                val style = if (i == 0) centerLabelStyle else labelStyle
+                val layout = textMeasurer.measure(label, style)
+                val alpha = if (i == sel) 1f else 0.85f
+                drawText(
+                    layout,
+                    topLeft = Offset(px[i] - layout.size.width / 2f, py[i] + pr[i] + 2.dp.toPx()),
+                    alpha = alpha,
+                )
+            }
+        }
+    }
+}
+
+/** Computes the view orientation + fit factor for the current camera and mode. */
+private fun viewOrientation(
+    cam: Camera,
+    threeD: Boolean,
+    width: Float,
+    height: Float,
+    positions: List<Graph3DLayout.Vec3>,
+): Graph3DProjector.Orientation {
+    var maxR = 1.0
+    for (p in positions) {
+        val r = if (threeD) {
+            sqrt(p.x * p.x + p.y * p.y + p.z * p.z)
+        } else {
+            sqrt(p.x * p.x + p.y * p.y)
+        }
+        if (r > maxR) maxR = r
+    }
+    val fit = (min(width, height) / (2.0 * maxR) * 0.40).coerceIn(0.05, 20.0)
+    return if (threeD) {
+        Graph3DProjector.Orientation(cam.yaw, cam.pitch, cam.zoom * fit)
+    } else {
+        Graph3DProjector.Orientation(0.0, 0.0, cam.zoom * fit)
     }
 }
 
