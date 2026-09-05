@@ -32,12 +32,18 @@ RequiresRoot: 'no'
 Builds:
   - versionName: "1.0.4"
     versionCode: 5
-    commit: a39bfdc
+    commit: c261ce0
+    subdir: app
+    gradle: yes
+    output: build/outputs/apk/release/app-release-unsigned.apk
+  - versionName: "1.0.5"
+    versionCode: 6
+    commit: eb49532
     subdir: app
     gradle: yes
     output: build/outputs/apk/release/app-release-unsigned.apk
 
 AutoUpdateMode: Version
 UpdateCheckMode: HTTP
-CurrentVersion: "1.0.4"
-CurrentVersionCode: 5
+CurrentVersion: "1.0.5"
+CurrentVersionCode: 6
