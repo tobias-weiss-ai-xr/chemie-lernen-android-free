@@ -34,9 +34,18 @@ def sh(*args, raw=False):
     return r.stdout
 
 
-def dump_ui():
-    sh("shell", "uiautomator", "dump", "/sdcard/ui.xml")
-    return sh("shell", "cat", "/sdcard/ui.xml").decode("utf-8", "replace")
+def dump_ui(tries=5):
+    # exec-out with /dev/tty avoids Git-Bash path mangling of "/sdcard/..."
+    # and is atomic (no separate cat round-trip). Retry handles the
+    # "UiAutomationService already registered" conflict when another
+    # session's uiautomator is mid-dump on this shared device.
+    for _ in range(tries):
+        out = sh("exec-out", "uiautomator", "dump", "/dev/tty").decode("utf-8", "replace")
+        m = re.search(r"<\?xml.*</hierarchy>", out, re.S)
+        if m:
+            return m.group(0)
+        time.sleep(1.5)
+    raise SystemExit("uiautomator dump failed after retries")
 
 
 def find_center(xml, text):

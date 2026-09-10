@@ -21,11 +21,11 @@ import ai.chemistry_learning_org.app.web.SiteUrls
 internal data class Calculator(@StringRes val titleRes: Int, val url: String, val icon: String)
 
 internal val calculators = listOf(
-    Calculator(R.string.calc_molar_mass, "/molar-masse-rechner/", "\u2697"),
+    Calculator(R.string.calc_molar_mass, "/molare-masse-rechner/", "\u2697"),
     Calculator(R.string.calc_ph, "/ph-rechner/", "\u26a1"),
     Calculator(R.string.calc_stoichiometry, "/reaktionsgleichungen-ausgleichen/", "\u2697"),
     Calculator(R.string.calc_gas_laws, "/gasgesetz-rechner/", "\u2702"),
-    Calculator(R.string.calc_concentration, "/konzentration-rechner/", "\u2697"),
+    Calculator(R.string.calc_concentration, "/konzentrationsumrechner/", "\u2697"),
     Calculator(R.string.calc_density, "/dichte-rechner/", "\u2696"),
     Calculator(R.string.calc_dilution, "/verduennungsrechner/", "\ud83d\udca1"),
     Calculator(R.string.calc_solubility, "/loeslichkeitsprodukt-rechner/", "\ud83d\udcdd"),
