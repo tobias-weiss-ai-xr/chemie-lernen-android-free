@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ai.chemistry_learning_org.BuildConfig
 import ai.chemistry_learning_org.R
 import ai.chemistry_learning_org.app.web.SiteUrls
 
@@ -56,7 +57,7 @@ fun SettingsScreen(
                         fontWeight = FontWeight.Bold,
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text(stringResource(R.string.settings_version), style = MaterialTheme.typography.bodySmall)
+                    Text("Version ${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.bodySmall)
                     Text(stringResource(R.string.settings_app_id), style = MaterialTheme.typography.bodySmall)
                     Text(stringResource(R.string.settings_license), style = MaterialTheme.typography.bodySmall)
                     Spacer(Modifier.height(8.dp))

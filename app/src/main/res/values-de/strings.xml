@@ -67,7 +67,6 @@
 
     <!-- More / Settings -->
     <string name="settings_info">ℹ️ Info</string>
-    <string name="settings_version">Version 1.0.0</string>
     <string name="settings_app_id">App-ID: ai.chemistry_learning_org</string>
     <string name="settings_license">Lizenz: Apache-2.0</string>
     <string name="settings_body">Die Inhalte stammen von chemie-lernen.org (Tobias Weiß). Die App ist ein Open-Source-Wrapper und bietet keine eigenen Inhalte.</string>
@@ -75,6 +74,8 @@
     <string name="link_website">Website</string>
     <string name="link_imprint">Impressum</string>
     <string name="link_privacy">Datenschutz</string>
+    <string name="web_error_title">Seite konnte nicht geladen werden</string>
+    <string name="web_error_message">Bitte prüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="kg_title">Wissensnetz</string>
     <string name="kg_search_hint">Begriff suchen…</string>
     <string name="kg_all">Alle</string>
