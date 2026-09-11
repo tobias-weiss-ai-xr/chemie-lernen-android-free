@@ -406,6 +406,8 @@ fun KnowledgeGraphScreen(
                                         Text(
                                             text = entity.name,
                                             style = MaterialTheme.typography.bodyLarge,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
                                         )
                                         Text(
                                             text = stringResource(KgCategories.labelRes(entity.category ?: "")) +
@@ -488,6 +490,7 @@ private fun GraphCanvas(
     val onSurface = MaterialTheme.colorScheme.onSurface
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
     val textMeasurer = rememberTextMeasurer(cacheSize = 128)
+    val graphDesc = stringResource(R.string.kg_title)
 
     val labelStyle = TextStyle(
         fontSize = 10.sp,
@@ -500,6 +503,7 @@ private fun GraphCanvas(
     Canvas(
         modifier = Modifier
             .fillMaxSize()
+            .clearAndSetSemantics { contentDescription = graphDesc }
             .pointerInput(graph, positions, is3D) {
                 detectTapGestures { offset ->
                     val cam = currentCamera
@@ -617,9 +621,11 @@ private fun GraphCanvas(
                 val style = if (i == 0) centerLabelStyle else labelStyle
                 val layout = textMeasurer.measure(label, style)
                 val alpha = if (i == sel) 1f else 0.85f
+                val lx = (px[i] - layout.size.width / 2f).coerceIn(0f, (w - layout.size.width).coerceAtLeast(0f))
+                val ly = (py[i] + pr[i] + 2.dp.toPx()).coerceIn(0f, (h - layout.size.height).coerceAtLeast(0f))
                 drawText(
                     layout,
-                    topLeft = Offset(px[i] - layout.size.width / 2f, py[i] + pr[i] + 2.dp.toPx()),
+                    topLeft = Offset(lx, ly),
                     alpha = alpha,
                 )
             }
@@ -706,7 +712,13 @@ private fun NodeDetailCard(
                 }
             }
             item {
-                Text(node.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text(
+                    node.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
             node.description?.let { description ->
                 item {
