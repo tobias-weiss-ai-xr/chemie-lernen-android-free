@@ -136,6 +136,9 @@ fun KnowledgeGraphScreen(
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
     var camera by remember { mutableStateOf(Camera.THREE_D) }
     var selectJob by remember { mutableStateOf<Job?>(null) }
+    // Auto-rotate spins the 3D graph while idle; the first manual gesture
+    // stops it so the view doesn't fight the user. Resumed on new selection.
+    var autoRotate by remember { mutableStateOf(true) }
 
     val repo = remember {
         KnowledgeGraphRepository(
@@ -176,6 +179,7 @@ fun KnowledgeGraphScreen(
         selectJob = null
         selectedIndex = null
         camera = if (threeD) Camera.THREE_D else Camera.TWO_D
+        autoRotate = true
         selectJob = scope.launch {
             val positions = withContext(Dispatchers.Default) {
                 Graph3DLayout.compute(
@@ -217,7 +221,7 @@ fun KnowledgeGraphScreen(
         var last = 0L
         while (true) {
             withFrameNanos { now ->
-                if (last != 0L && selectedIndex == null) {
+                if (last != 0L && selectedIndex == null && autoRotate) {
                     camera = camera.copy(yaw = camera.yaw + (now - last) * 1e-10)
                 }
                 last = now
@@ -260,6 +264,7 @@ fun KnowledgeGraphScreen(
                                 Text(if (s.is3D) "3D" else "2D")
                             }
                             IconButton(onClick = {
+                                autoRotate = true
                                 camera = if (s.is3D) Camera.THREE_D else Camera.TWO_D
                             }) {
                                 Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.kg_reset_view))
@@ -441,7 +446,7 @@ fun KnowledgeGraphScreen(
                             positions = s.positions,
                             is3D = s.is3D,
                             camera = camera,
-                            onCamera = { camera = it },
+                            onCamera = { camera = it; autoRotate = false },
                             selectedIndex = selectedIndex,
                             onSelect = { selectedIndex = it },
                         )
