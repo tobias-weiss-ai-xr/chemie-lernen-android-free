@@ -66,6 +66,27 @@ class KgGraphDataTest {
     }
 
     @Test
+    fun `build dedupes entity nodes with the same name`() {
+        // The API/pagination can return the same entity twice; the node list
+        // must match the index (first occurrence wins) so the picker does not
+        // show duplicate rows and LazyColumn keys stay unique.
+        val snapshot = KgSnapshot(
+            entities = listOf(
+                entity("Wasser", "sauerstoff"),
+                entity("Wasser", "sauerstoff"),
+                entity("Sauerstoff", "wasser"),
+            ),
+            articles = emptyList(),
+        )
+        val graph = KgGraphData.build(snapshot)
+        assertThat(graph.nodes).hasSize(2)
+        assertThat(graph.nodes.map { it.name }).containsExactly("Wasser", "Sauerstoff").inOrder()
+        assertThat(graph.index).hasSize(2)
+        // Edges still resolve through the deduped index (Wasser<->Sauerstoff).
+        assertThat(graph.edges).containsExactly(0 to 1)
+    }
+
+    @Test
     fun `buildEgo - center plus one-hop neighbors with cross edges`() {
         val snapshot = KgSnapshot(
             entities = listOf(

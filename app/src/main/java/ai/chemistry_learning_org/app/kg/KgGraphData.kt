@@ -15,10 +15,16 @@ object KgGraphData {
     )
 
     fun build(snapshot: KgSnapshot): Graph {
-        val nodes = snapshot.entities
-        val index = HashMap<String, Int>(nodes.size)
-        nodes.forEachIndexed { i, e ->
-            index.putIfAbsent(e.name.lowercase(), i)
+        // Deduplicate entities by lowercase name: the index already keeps only
+        // the first occurrence (putIfAbsent), so a duplicate node was unreachable
+        // via edges/ego yet still shown twice in the picker. Drop it here so the
+        // node list matches the index and LazyColumn keys stay unique.
+        val nodes = ArrayList<KgEntity>(snapshot.entities.size)
+        val index = HashMap<String, Int>(snapshot.entities.size)
+        for (e in snapshot.entities) {
+            if (index.putIfAbsent(e.name.lowercase(), nodes.size) == null) {
+                nodes += e
+            }
         }
         val seen = HashSet<Long>()
         val edges = ArrayList<Pair<Int, Int>>()
