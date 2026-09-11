@@ -392,7 +392,7 @@ fun KnowledgeGraphScreen(
                         }
                     } else {
                         LazyColumn(Modifier.weight(1f)) {
-                            items(filtered.size) { i ->
+                            items(filtered.size, key = { filtered[it].name }) { i ->
                                 val entity = filtered[i]
                                 Row(
                                     modifier = Modifier
