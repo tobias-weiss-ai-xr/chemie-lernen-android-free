@@ -34,15 +34,14 @@ object KgCategories {
         "stoff", "konzept", "reaktion", "methode", "person", "quelle", "lehrplan", "kmk",
     )
 
-    fun labelRes(category: String): Int = meta(category).labelRes
+    fun labelRes(category: String?): Int = meta(category).labelRes
 
     fun colorHex(category: String?): Long = meta(category).colorHex
 
     /**
      * Pure view-model for the egocentric detail: the selected entity in the
-     * center and its related entities sorted by their own relation count
-     * (strongest connections first — we only know the count of the center,
-     * so ties keep API order which is strength-sorted server-side).
+     * center and its related entities in API order (the server returns them
+     * strength-sorted; there is no per-relation count on the client).
      */
     data class Center(
         val entity: KgEntity,
@@ -52,8 +51,7 @@ object KgCategories {
 
     fun buildCenter(entity: KgEntity, allArticles: List<KgArticle>): Center {
         val centerName = entity.name.lowercase()
-        val related = entity.related
-            .sortedByDescending { it.name.length } // stable, deterministic order
+        val related = entity.related // server order is strength-sorted; keep it
         // The API can return the same article for several entity mentions —
         // dedupe by URL so LazyColumn keys stay unique (crash otherwise).
         val articles = allArticles.filter { article ->

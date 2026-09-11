@@ -32,7 +32,10 @@ object Graph3DProjector {
 
     /** Projects an already-rotated point into [0,width]x[0,height]. */
     fun projectRotated(rotated: Graph3DLayout.Vec3, o: Orientation, width: Float, height: Float): ScreenPoint {
-        val s = o.fov / (o.fov + rotated.z) // z toward viewer is negative
+        // Clamp the denominator so a node at/behind the camera plane (z <= -fov)
+        // cannot produce infinity or a negative scale. Only bites for extreme layouts.
+        val denom = (o.fov + rotated.z).coerceAtLeast(o.fov * 0.01)
+        val s = o.fov / denom // z toward viewer is negative
         val cx = width / 2.0
         val cy = height / 2.0
         val x = (rotated.x * s * o.zoom + cx).toFloat()

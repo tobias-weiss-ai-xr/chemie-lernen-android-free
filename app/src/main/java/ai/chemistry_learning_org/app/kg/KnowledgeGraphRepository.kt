@@ -1,6 +1,8 @@
 package ai.chemistry_learning_org.app.kg
 
 import ai.chemistry_learning_org.app.web.SiteUrls
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -62,23 +64,27 @@ class KnowledgeGraphRepository(
         return KgSnapshot.fromPages(pages)
     }
 
-    private fun readCache(): KgSnapshot? {
+    private suspend fun readCache(): KgSnapshot? {
         val file = cacheFile ?: return null
-        if (!file.exists()) return null
-        return try {
-            val snapshot = cacheFormat().fromString(file.readText())
-            if (snapshot.entities.isEmpty()) null else snapshot
-        } catch (t: Throwable) {
-            null
+        return withContext(Dispatchers.IO) {
+            if (!file.exists()) return@withContext null
+            try {
+                val snapshot = cacheFormat().fromString(file.readText())
+                if (snapshot.entities.isEmpty()) null else snapshot
+            } catch (t: Throwable) {
+                null
+            }
         }
     }
 
-    private fun writeCache(file: File, snapshot: KgSnapshot) {
-        try {
-            file.parentFile?.mkdirs()
-            file.writeText(cacheFormat().toString(snapshot))
-        } catch (t: Throwable) {
-            // cache write failures are non-fatal
+    private suspend fun writeCache(file: File, snapshot: KgSnapshot) {
+        withContext(Dispatchers.IO) {
+            try {
+                file.parentFile?.mkdirs()
+                file.writeText(cacheFormat().toString(snapshot))
+            } catch (t: Throwable) {
+                // cache write failures are non-fatal
+            }
         }
     }
 

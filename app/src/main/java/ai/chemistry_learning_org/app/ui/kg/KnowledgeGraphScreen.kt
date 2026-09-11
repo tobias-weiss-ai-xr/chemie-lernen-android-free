@@ -152,14 +152,16 @@ fun KnowledgeGraphScreen(
         selectJob = null
         when (val result = repo.load()) {
             is KnowledgeGraphRepository.LoadResult.Success -> {
-                fullGraph = KgGraphData.build(result.snapshot)
+                val graph = KgGraphData.build(result.snapshot)
+                fullGraph = graph
                 fromCache = false
-                state = KgUiState.Picker(fullGraph!!, fromCache = false)
+                state = KgUiState.Picker(graph, fromCache = false)
             }
             is KnowledgeGraphRepository.LoadResult.Offline -> {
-                fullGraph = KgGraphData.build(result.snapshot)
+                val graph = KgGraphData.build(result.snapshot)
+                fullGraph = graph
                 fromCache = true
-                state = KgUiState.Picker(fullGraph!!, fromCache = true)
+                state = KgUiState.Picker(graph, fromCache = true)
             }
             KnowledgeGraphRepository.LoadResult.Unavailable -> {
                 state = KgUiState.Unavailable
@@ -209,12 +211,13 @@ fun KnowledgeGraphScreen(
     // Restarts when is3D changes (via key) so rotation continues with new orientation.
     // 2D is a static top-down view: rotating yaw there spins the whole planar disc.
     LaunchedEffect((state as? KgUiState.Ready)?.is3D) {
-        if (state !is KgUiState.Ready) return@LaunchedEffect
+        // 2D is a static top-down view: skip the frame loop entirely.
+        // The key restarts the effect on a 3D toggle, so rotation resumes on switch.
+        if ((state as? KgUiState.Ready)?.is3D != true) return@LaunchedEffect
         var last = 0L
         while (true) {
             withFrameNanos { now ->
-                val ready = state as? KgUiState.Ready
-                if (last != 0L && selectedIndex == null && ready?.is3D == true) {
+                if (last != 0L && selectedIndex == null) {
                     camera = camera.copy(yaw = camera.yaw + (now - last) * 1e-10)
                 }
                 last = now
@@ -410,7 +413,7 @@ fun KnowledgeGraphScreen(
                                             overflow = TextOverflow.Ellipsis,
                                         )
                                         Text(
-                                            text = stringResource(KgCategories.labelRes(entity.category ?: "")) +
+                                            text = stringResource(KgCategories.labelRes(entity.category)) +
                                                 " \u00B7 " +
                                                 stringResource(R.string.kg_relations, entity.relationCount),
                                             style = MaterialTheme.typography.labelSmall,
@@ -693,7 +696,7 @@ private fun NodeDetailCard(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = stringResource(KgCategories.labelRes(node.category ?: "")),
+                        text = stringResource(KgCategories.labelRes(node.category)),
                         style = MaterialTheme.typography.labelMedium,
                     )
                     Spacer(Modifier.weight(1f))
